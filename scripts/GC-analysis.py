@@ -1,8 +1,13 @@
+"""
+A command-line utility for calculating the GC percentage of an input genomic sequence.
+"""
+
 import argparse as ap
 import os
 
 
 def get_args():
+    """Helper function to handler all the command-line input options"""
     parser = ap.ArgumentParser()
     parser.add_argument("input_file", type=str, help="Name of the input file in FASTA format")
     parser.add_argument("-o", "--output_file", type=str, help="Name of the output file")
@@ -18,18 +23,20 @@ def get_args():
 
 
 def generate_wiggle(input_file, output_file, window_size, shift):
-    """"""
+    """Main function for generating the output file"""
     basepair_location = 1
     counter = 0
     total_percent = 0
     percentage_bp = 1 / window_size * 100
 
     def percentage(byte):
+        """Test the if the byte is G or C"""
         if byte in ['G', 'C']:
             return percentage_bp
         return 0
 
     def open_results_file(input_file_name, output_file_name):
+        """A helper function to create the output file in the input file location"""
         head, tail = os.path.split(input_file_name)
         if output_file_name:
             file = open(os.path.join(head, output_file_name), "w+")
