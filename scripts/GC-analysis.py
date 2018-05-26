@@ -1,5 +1,4 @@
 import argparse as ap
-import os
 
 parser = ap.ArgumentParser()
 parser.add_argument("input_file", type=str, help="Name of the input file in FASTA format")
@@ -13,29 +12,26 @@ parser.add_argument("-f", "--output_format", type=str, choices=["wig", "wiggle",
 args = parser.parse_args()
 
 
+def percentage(byte):
+    if byte in ['G', 'C']:
+        return percentage_bp
+    return 0
+
+
 def generate_wiggle(input_file, output_file, window_size, shift):
     """"""
     basepair_location = 1
     counter = 0
     total_percent = 0
+    global percentage_bp
     percentage_bp = 1 / window_size * 100
 
-    def percentage(byte):
-        if byte in ['G', 'C']:
-            return percentage_bp
-        return 0
-
-    def open_results_file(input_file_name, output_file_name):
-        head, tail = os.path.split(input_file_name)
-        if output_file_name:
-            file = open(os.path.join(head, output_file_name), "w+")
-        else:
-            wig_filename = tail.split(".")[0] + ".wig"
-            file = open(os.path.join(head, wig_filename), "w+")
-        return file
+    if output_file:
+        result = open(output_file, "w+")
+    else:
+        result = open(input_file.split(".")[0] + ".wig", "w+")
 
     with open(input_file, "rb") as f:
-        result = open_results_file(input_file, output_file)
         # read track line
         title = f.readline().decode('utf-8')
         result.write(title)
