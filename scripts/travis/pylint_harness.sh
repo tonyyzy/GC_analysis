@@ -17,8 +17,8 @@
 
 disabled="--disable=similarities,invalid-name,too-many-statements,too-many-arguments,too-many-locals,too-few-public-methods,relative-import,no-self-use"
 
-pylint ${disabled} --rcfile pylintrc process*.py > output.err
-pylint ${disabled} --rcfile pylintrc tool >> output.err
+# pylint ${disabled} --rcfile pylintrc process*.py > output.err
+# pylint ${disabled} --rcfile pylintrc tool >> output.err
 pylint ${disabled} --rcfile pylintrc tests >> output.err
 
 grep -v "\-\-\-\-\-\-\-\-\-" output.err | grep -v "Your code has been rated" | grep -v "\n\n" | sed '/^$/d' > pylint.err
