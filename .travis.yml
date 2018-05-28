@@ -13,6 +13,9 @@ env:
         - TESTENV=code
         - TESTENV=pylint
 
+before_install:
+  - chmod +x ./scripts/travis/docs_harness.sh
+  - chmod +x ./scripts/travis/pylint_harness.sh
 # command to install dependencies
 install:
 #     - pip install .
