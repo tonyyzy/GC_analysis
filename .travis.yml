@@ -35,7 +35,7 @@ script:
 deploy:
   provider: releases
   skip-cleanup: true
-  file: build/GC_analysis
+  file: ./dist/GC_analysis
   api_key: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
   keep-history: true
   on:
