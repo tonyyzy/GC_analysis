@@ -9,27 +9,27 @@ python:
 
 env:
     matrix:
-        # - TESTENV=docs
-        # - TESTENV=code
-        # - TESTENV=pylint
+        - TESTENV=docs
+        - TESTENV=code
+        - TESTENV=pylint
         - TESTENV=build
 
 # before_install:
-#   - chmod +x ./scripts/travis/docs_harness.sh
-#   - chmod +x ./scripts/travis/pylint_harness.sh
-# # command to install dependencies
+  - chmod +x ./scripts/travis/docs_harness.sh
+  - chmod +x ./scripts/travis/pylint_harness.sh
+# command to install dependencies
 install:
 #     - pip install .
-    # - pip install -r requirements.txt
-    # - if [[ "$TESTENV" == "docs" ]]; then pip install sphinx;fi
-    # - if [[ "$TESTENV" == "pylint" ]]; then pip install pylint;fi
+    - pip install -r requirements.txt
+    - if [[ "$TESTENV" == "docs" ]]; then pip install sphinx;fi
+    - if [[ "$TESTENV" == "pylint" ]]; then pip install pylint;fi
     - if [[ "$TESTENV" == "build" ]]; then pip install pyinstaller;fi
 
 # command to run tests
 script:
-    # - if [[ "$TESTENV" == "code" ]]; then pytest tests; fi
-    # - if [[ "$TESTENV" == "docs" ]]; then ./scripts/travis/docs_harness.sh; fi
-    # - if [[ "$TESTENV" == "pylint" ]]; then ./scripts/travis/pylint_harness.sh; fi
+    - if [[ "$TESTENV" == "code" ]]; then pytest tests; fi
+    - if [[ "$TESTENV" == "docs" ]]; then ./scripts/travis/docs_harness.sh; fi
+    - if [[ "$TESTENV" == "pylint" ]]; then ./scripts/travis/pylint_harness.sh; fi
     - if [[ "$TESTENV" == "build" ]]; then pyinstaller --onefile ./scripts/GC_analysis.py; fi
 
 deploy:
@@ -39,4 +39,4 @@ deploy:
   api_key: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
   keep-history: true
   on:
-    branch: Auto-build
+    tags: true
