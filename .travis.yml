@@ -1,0 +1,30 @@
+language: python
+
+os: linux
+dist: trusty
+group: edge
+
+python:
+    - "2.7"
+    - "3.5"
+    - "3.6"
+
+# env:
+#     matrix:
+#         - TESTENV=docs
+#         - TESTENV=code
+#         - TESTENV=pylint
+# 
+# # command to install dependencies
+install:
+#     - pip install .
+#     - pip install -r requirements.txt
+#     - if [[ "$TESTENV" == "docs" ]]; then pip install sphinx;fi
+#     - if [[ "$TESTENV" == "pylint" ]]; then pip install pylint;fi
+
+# command to run tests
+script:
+  pytest tests
+#     - if [[ "$TESTENV" == "code" ]]; then pytest -m "not underdeverlopment"; fi
+#     - if [[ "$TESTENV" == "docs" ]]; then ./scripts/travis/docs_harness.sh; fi
+#     - if [[ "$TESTENV" == "pylint" ]]; then ./scripts/travis/pylint_harness.sh; fi
