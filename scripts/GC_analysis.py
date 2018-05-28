@@ -77,4 +77,5 @@ def generate_wiggle(input_file, output_file, window_size, shift):
     result.close()
 
 
-generate_wiggle(*get_args()[:])
+if __name__ == "__main__":
+    generate_wiggle(*get_args()[:])
