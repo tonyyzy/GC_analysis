@@ -22,9 +22,6 @@ Documentation for Test Pipeline
    :name: mastertoc
    :maxdepth: 2
 
-   install
-   pipelines
-   tool
    license
 
 
