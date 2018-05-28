@@ -9,9 +9,9 @@ python:
 
 env:
     matrix:
-        - TESTENV=docs
-        - TESTENV=code
-        - TESTENV=pylint
+        # - TESTENV=docs
+        # - TESTENV=code
+        # - TESTENV=pylint
         - TESTENV=build
 
 # before_install:
@@ -31,3 +31,11 @@ script:
     # - if [[ "$TESTENV" == "docs" ]]; then ./scripts/travis/docs_harness.sh; fi
     # - if [[ "$TESTENV" == "pylint" ]]; then ./scripts/travis/pylint_harness.sh; fi
     - if [[ "$TESTENV" == "build" ]]; then pyinstaller --onefile ./scripts/GC_analysis.py; fi
+
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
+  keep-history: true
+  on:
+    branch: Auto-build
