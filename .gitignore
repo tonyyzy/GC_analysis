@@ -1,2 +1,3 @@
-*.wig
 *.pyc
+test*.wig
+.pytest_cache
