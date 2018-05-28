@@ -10,9 +10,9 @@ Welcome to GC_analysis's documentation!
    :maxdepth: 2
    :caption: Contents:
     
-    license
-    modules
-    scripts
+    license.rst
+    modules.rst
+    scripts.rst
 
 Indices and tables
 ==================
