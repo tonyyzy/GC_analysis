@@ -9,8 +9,10 @@ Welcome to GC_analysis's documentation!
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-
-
+    
+    license
+    modules
+    scripts
 
 Indices and tables
 ==================
