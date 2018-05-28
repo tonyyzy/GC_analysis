@@ -14,7 +14,7 @@ env:
         - TESTENV=pylint
         - TESTENV=build
 
-# before_install:
+before_install:
   - chmod +x ./scripts/travis/docs_harness.sh
   - chmod +x ./scripts/travis/pylint_harness.sh
 # command to install dependencies
