@@ -11,6 +11,7 @@ scripts.GC\_analysis module
     :members:
     :undoc-members:
     :show-inheritance:
+.. autofunction:: scripts.GC_analysis
 
 
 Module contents
@@ -20,4 +21,3 @@ Module contents
     :members:
     :undoc-members:
     :show-inheritance:
-.. autofunction:: scripts
