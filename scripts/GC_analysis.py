@@ -3,7 +3,7 @@ A command-line utility for calculating the GC percentage of an input genomic seq
 """
 
 import argparse as ap
-import os
+import os, sys
 
 
 def get_args():
@@ -41,8 +41,7 @@ def generate_wiggle(input_file, output_file, window_size, shift):
         if output_file_name:
             file = open(os.path.join(head, output_file_name), "w+")
         else:
-            wig_filename = tail.split(".")[0] + ".wig"
-            file = open(os.path.join(head, wig_filename), "w+")
+            file = sys.stdout
         return file
 
     with open(input_file, "rb") as genome:
