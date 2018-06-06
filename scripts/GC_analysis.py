@@ -27,11 +27,12 @@ def generate_wiggle(input_file, output_file, window_size, shift):
     basepair_location = 1
     counter = 0
     total_percent = 0
-    percentage_bp = 1 / window_size * 100
+    percentage_bp = (1.0 / window_size) * 100
+    prev_bps = [""] * (window_size - shift)
 
     def percentage(byte):
         """Test the if the byte is G or C"""
-        if byte in ['G', 'C']:
+        if byte in ["G", "C"]:
             return percentage_bp
         return 0
 
@@ -44,35 +45,52 @@ def generate_wiggle(input_file, output_file, window_size, shift):
             file = sys.stdout
         return file
 
-    with open(input_file, "rb") as genome:
+    with open(input_file, "r") as genome:
         result = open_results_file(input_file, output_file)
         # read track line
-        title = genome.readline().decode('utf-8')
+        title = genome.readline()
         result.write(title)
         # add step info
         result.write("variableStep span=" + str(window_size) + "\n")
-        while True:
-            # read file one bp at a time
-            base = genome.read(1).decode('utf-8')
+        for i in range(window_size):
+            base = genome.read(1)
+            # print(base)
             # if not EOF and not newline
             if base != "" and base != "\n":
                 counter += 1
                 total_percent += percentage(base)
+                # print(total_percent)
+                # print(total_percent)
+                if counter > shift:
+                    prev_bps[counter - shift - 1] = base
+                if counter == window_size:
+                    result.write(str(basepair_location) + "  " + str(int(total_percent)) + "\n")
+                    basepair_location = basepair_location + shift
+                    counter = window_size - shift
+                    total_percent = sum(percentage(x) for x in prev_bps)
+        while True:
+            # read file one bp at a time
+            base = genome.read(1)
+            # if not EOF and not newline
+            if base != "" and base != "\n":
+                counter += 1
+                total_percent += percentage(base)
+                # print(total_percent)
+                if counter > shift:
+                    prev_bps[counter - shift - 1] = base
                 # if reached window size, write percentage
                 if counter == window_size:
                     result.write(str(basepair_location) + "  " + str(int(total_percent)) + "\n")
                     basepair_location = basepair_location + shift
-                    genome.seek(-(window_size - shift), 1)
-                    counter = 0
-                    total_percent = 0
+                    # genome.seek(-(window_size - shift), 1)
+                    counter = window_size - shift
+                    total_percent = sum(percentage(x) for x in prev_bps)
             elif base == '':
                 # if end of file and still bp remains
                 if counter != 0:
                     result.write(str(basepair_location) + "  " + str(int(total_percent * window_size / counter)) + "\n")
-                    basepair_location += shift
                     break
-                else:
-                    break
+                break
     result.close()
 
 
