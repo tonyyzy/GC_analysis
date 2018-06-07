@@ -40,7 +40,7 @@ def generate_wiggle(input_file, output_file, window_size, shift):
         """A helper function to create the output file in the input file location"""
         head, tail = os.path.split(input_file_name)
         if output_file_name:
-            file = open(os.path.join(head, output_file_name), "w+")
+            file = open(os.path.join(head, output_file_name), "w+", newline="\n")
         else:
             file = sys.stdout
         return file
@@ -49,7 +49,10 @@ def generate_wiggle(input_file, output_file, window_size, shift):
         result = open_results_file(input_file, output_file)
         # read track line
         title = genome.readline()
-        result.write(title)
+        if title[0] != ">":
+            print("WARNING! The input file is not in fasta format.")
+            raise SystemError()
+        result.write(title.split(" ")[0].split("|")[-1] + "\n")
         # add step info
         result.write("variableStep span=" + str(window_size) + "\n")
         for i in range(window_size):
@@ -72,7 +75,7 @@ def generate_wiggle(input_file, output_file, window_size, shift):
             # read file one bp at a time
             base = genome.read(1)
             # if not EOF and not newline
-            if base != "" and base != "\n":
+            if base not in ["", " ", "\n", "\r"]:
                 counter += 1
                 total_percent += percentage(base)
                 # print(total_percent)
