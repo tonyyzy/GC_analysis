@@ -51,8 +51,8 @@ def generate_wiggle(input_file, output_file, window_size, shift):
         title = genome.readline()
         if title[0] != ">":
             print("WARNING! The input file is not in fasta format.")
-            raise SystemError()
-        result.write(title.split(" ")[0].split("|")[-1] + "\n")
+            raise SystemError(1)
+        result.write(title.split(" ")[0] + "\n")
         # add step info
         result.write("variableStep span=" + str(window_size) + "\n")
         for i in range(window_size):
