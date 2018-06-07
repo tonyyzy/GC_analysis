@@ -1,3 +1,4 @@
 *.pyc
 test*.wig
 .pytest_cache
+*.fasta.wig
