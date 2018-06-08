@@ -3,17 +3,19 @@ A command-line utility for calculating the GC percentage of an input genomic seq
 """
 
 import argparse as ap
-import os, sys
+import os
+import sys
 
 
 def get_args():
     """Helper function to handler all the command-line input options"""
     parser = ap.ArgumentParser()
     requiredNamed = parser.add_argument_group('required named arguments')
-    requiredNamed.add_argument("-i", "--input_file", type=str, help="Name of the input file in FASTA format", required=True)
+    requiredNamed.add_argument("-i", "--input_file", type=str, help="Name of the input file in FASTA format",
+                               required=True)
     requiredNamed.add_argument("-w", "--window_size", type=int,
-                        help="Number of base pairs where the GC percentage is calculated for",
-                        required=True)
+                               help="Number of base pairs where the GC percentage is calculated for",
+                               required=True)
     requiredNamed.add_argument("-s", "--shift", type=int, help="The shift increment", required=True)
     parser.add_argument("-o", "--output_file", type=str, help="Name of the output file")
     parser.add_argument("-ot", "--omit_tail", action="store_true", help="True: if the trailing sequence should be "
@@ -23,10 +25,10 @@ def get_args():
     # parser.add_argument("-f", "--output_format", type=str, choices=["wiggle", "bigwig", "gzip"])
     args = parser.parse_args()
 
-    return args.input_file, args.output_file, args.window_size, args.shift
+    return args.input_file, args.output_file, args.window_size, args.shift, args.omit_tail
 
 
-def generate_wiggle(input_file, output_file, window_size, shift):
+def generate_wiggle(input_file, output_file, window_size, shift, omit_tail):
     """Main function for generating the output file"""
     basepair_location = 1
     counter = 0
@@ -67,31 +69,32 @@ def generate_wiggle(input_file, output_file, window_size, shift):
             sys.stderr.write("WARNING! This fasta file does not contain chromosome information.")
             result.write(title[0] + "\n")
 
-    def base_test(counter, total_percent, basepair_location):
+    def base_test(counter_fun, total_percent_fun, basepair_location_fun):
         base = genome.read(1)
         # if not EOF and not newline
         if base not in ["", " ", "\n", "\r", ">"]:
-            counter += 1
-            total_percent += percentage(base)
+            counter_fun += 1
+            total_percent_fun += percentage(base)
             # print(total_percent)
-            if counter > shift:
-                prev_bps[counter - shift - 1] = base
+            if counter_fun > shift:
+                prev_bps[counter_fun - shift - 1] = base
             # if reached window size, write percentage
-            if counter == window_size:
-                result.write(str(basepair_location) + "  " + str(int(total_percent)) + "\n")
-                basepair_location = basepair_location + shift
-                counter = window_size - shift
-                total_percent = sum(percentage(x) for x in prev_bps)
+            if counter_fun == window_size:
+                result.write(str(basepair_location_fun) + "  " + str(int(total_percent_fun)) + "\n")
+                basepair_location_fun = basepair_location_fun + shift
+                counter_fun = window_size - shift
+                total_percent_fun = sum(percentage(x) for x in prev_bps)
         elif base == ">":
             sys.stderr.write("WARNING! This fasta file contains more than one sequence. Only the first sequence is "
                              "processed.")
             return 0
         elif base == "":
             # if end of file and still bp remains
-            if counter != 0:
-                result.write(str(basepair_location) + "  " + str(int(total_percent * window_size / counter)) + "\n")
+            if counter_fun != 0 and not omit_tail:
+                result.write(str(basepair_location_fun) + "  " + str(int(total_percent_fun * window_size / counter_fun))
+                             + "\n")
             return 0
-        return counter, total_percent, basepair_location
+        return counter_fun, total_percent_fun, basepair_location_fun
 
     with open(input_file, "r") as genome:
         result = open_results_file(input_file, output_file)
