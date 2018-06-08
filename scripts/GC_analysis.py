@@ -67,6 +67,32 @@ def generate_wiggle(input_file, output_file, window_size, shift):
             sys.stderr.write("WARNING! This fasta file does not contain chromosome information.")
             result.write(title[0] + "\n")
 
+    def base_test(counter, total_percent, basepair_location):
+        base = genome.read(1)
+        # if not EOF and not newline
+        if base not in ["", " ", "\n", "\r", ">"]:
+            counter += 1
+            total_percent += percentage(base)
+            # print(total_percent)
+            if counter > shift:
+                prev_bps[counter - shift - 1] = base
+            # if reached window size, write percentage
+            if counter == window_size:
+                result.write(str(basepair_location) + "  " + str(int(total_percent)) + "\n")
+                basepair_location = basepair_location + shift
+                counter = window_size - shift
+                total_percent = sum(percentage(x) for x in prev_bps)
+        elif base == ">":
+            sys.stderr.write("WARNING! This fasta file contains more than one sequence. Only the first sequence is "
+                             "processed.")
+            return 0
+        elif base == "":
+            # if end of file and still bp remains
+            if counter != 0:
+                result.write(str(basepair_location) + "  " + str(int(total_percent * window_size / counter)) + "\n")
+            return 0
+        return counter, total_percent, basepair_location
+
     with open(input_file, "r") as genome:
         result = open_results_file(input_file, output_file)
         # read title line
@@ -75,48 +101,16 @@ def generate_wiggle(input_file, output_file, window_size, shift):
 
         # add step info
         result.write("variableStep span=" + str(window_size) + "\n")
+        
         for i in range(window_size):
-            base = genome.read(1)
-            # print(base)
-            # if not EOF and not newline
-            if base != "" and base != "\n":
-                counter += 1
-                total_percent += percentage(base)
-                # print(total_percent)
-                # print(total_percent)
-                if counter > shift:
-                    prev_bps[counter - shift - 1] = base
-                if counter == window_size:
-                    result.write(str(basepair_location) + "  " + str(int(total_percent)) + "\n")
-                    basepair_location = basepair_location + shift
-                    counter = window_size - shift
-                    total_percent = sum(percentage(x) for x in prev_bps)
-        while True:
-            # read file one bp at a time
-            base = genome.read(1)
-            # if not EOF and not newline
-            if base not in ["", " ", "\n", "\r", ">"]:
-                counter += 1
-                total_percent += percentage(base)
-                # print(total_percent)
-                if counter > shift:
-                    prev_bps[counter - shift - 1] = base
-                # if reached window size, write percentage
-                if counter == window_size:
-                    result.write(str(basepair_location) + "  " + str(int(total_percent)) + "\n")
-                    basepair_location = basepair_location + shift
-                    # genome.seek(-(window_size - shift), 1)
-                    counter = window_size - shift
-                    total_percent = sum(percentage(x) for x in prev_bps)
-            elif base == ">":
-                sys.stderr.write("WARNING! This fasta file contains more than one sequence. Only the first sequence is "
-                                 "processed.")
+            try:
+                counter, total_percent, basepair_location = base_test(counter, total_percent, basepair_location)
+            except TypeError:
                 break
-            elif base == "":
-                # if end of file and still bp remains
-                if counter != 0:
-                    result.write(str(basepair_location) + "  " + str(int(total_percent * window_size / counter)) + "\n")
-                    break
+        while True:
+            try:
+                counter, total_percent, basepair_location = base_test(counter, total_percent, basepair_location)
+            except TypeError:
                 break
     result.close()
 
