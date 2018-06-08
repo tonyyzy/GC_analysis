@@ -45,11 +45,7 @@ def generate_wiggle(input_file, output_file, window_size, shift):
             file = sys.stdout
         return file
 
-    with open(input_file, "r") as genome:
-        result = open_results_file(input_file, output_file)
-        # read track line
-        title = genome.readline().split(" ")
-
+    def write_title(title):
         if title[0][0] != ">":
             print("WARNING! The input file is not in fasta format.")
             raise SystemError(1)
@@ -61,6 +57,13 @@ def generate_wiggle(input_file, output_file, window_size, shift):
         else:
             sys.stderr.write("WARNING! This fasta file does not contain chromosome information.")
             result.write(title[0] + "\n")
+
+    with open(input_file, "r") as genome:
+        result = open_results_file(input_file, output_file)
+        # read track line
+        wiggle_title = genome.readline().split(" ")
+
+        write_title(wiggle_title)
 
         # add step info
         result.write("variableStep span=" + str(window_size) + "\n")
