@@ -20,7 +20,7 @@ def get_args():
                                                                         "omitted. Default behaviour is to retain "
                                                                         "the leftover sequence.",
                         default=False)
-    # parser.add_argument("-f", "--output_format", type=str, choices=["wig", "wiggle", "bigwig", "bw", "gzip"])
+    # parser.add_argument("-f", "--output_format", type=str, choices=["wiggle", "bigwig", "gzip"])
     args = parser.parse_args()
 
     return args.input_file, args.output_file, args.window_size, args.shift
