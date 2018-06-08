@@ -9,14 +9,18 @@ import os, sys
 def get_args():
     """Helper function to handler all the command-line input options"""
     parser = ap.ArgumentParser()
-    parser.add_argument("input_file", type=str, help="Name of the input file in FASTA format")
+    requiredNamed = parser.add_argument_group('required named arguments')
+    requiredNamed.add_argument("-i", "--input_file", type=str, help="Name of the input file in FASTA format", required=True)
+    requiredNamed.add_argument("-w", "--window_size", type=int,
+                        help="Number of base pairs where the GC percentage is calculated for",
+                        required=True)
+    requiredNamed.add_argument("-s", "--shift", type=int, help="The shift increment", required=True)
     parser.add_argument("-o", "--output_file", type=str, help="Name of the output file")
-    parser.add_argument("window_size", type=int, help="Number of base pairs where the GC percentage is calculated for")
-    parser.add_argument("shift", type=int, help="The shift increment")
     parser.add_argument("-ot", "--omit_tail", action="store_true", help="True: if the trailing sequence should be "
                                                                         "omitted. Default behaviour is to retain "
-                                                                        "the leftover sequence.")
-    parser.add_argument("-f", "--output_format", type=str, choices=["wig", "wiggle", "bigwig", "bw", "gzip"])
+                                                                        "the leftover sequence.",
+                        default=False)
+    # parser.add_argument("-f", "--output_format", type=str, choices=["wig", "wiggle", "bigwig", "bw", "gzip"])
     args = parser.parse_args()
 
     return args.input_file, args.output_file, args.window_size, args.shift
