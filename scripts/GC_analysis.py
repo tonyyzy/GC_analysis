@@ -84,7 +84,7 @@ def generate_wiggle(input_file, output_file, window_size, shift):
             # read file one bp at a time
             base = genome.read(1)
             # if not EOF and not newline
-            if base not in ["", " ", "\n", "\r"]:
+            if base not in ["", " ", "\n", "\r", ">"]:
                 counter += 1
                 total_percent += percentage(base)
                 # print(total_percent)
@@ -97,7 +97,11 @@ def generate_wiggle(input_file, output_file, window_size, shift):
                     # genome.seek(-(window_size - shift), 1)
                     counter = window_size - shift
                     total_percent = sum(percentage(x) for x in prev_bps)
-            elif base == '':
+            elif base == ">":
+                sys.stderr.write("WARNING! This fasta file contains more than one sequence. Only the first sequence is "
+                                 "processed.")
+                break
+            elif base == "":
                 # if end of file and still bp remains
                 if counter != 0:
                     result.write(str(basepair_location) + "  " + str(int(total_percent * window_size / counter)) + "\n")
