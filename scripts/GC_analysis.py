@@ -50,10 +50,15 @@ def generate_wiggle(input_file, output_file, window_size, shift):
         return file
 
     def write_title(title):
+        """Parse the title from the fasta file and write the relevant information to the track definition line of the
+        wiggle file."""
+
+        # Check if the input file is in fasta format
         if title[0][0] != ">":
             print("WARNING! The input file is not in fasta format.")
             raise SystemError(1)
 
+        # Check if the input fasta file contains chromosome information
         if "chromosome" in title:
             chrom_index = title.index("chromosome")
             chrom = title[chrom_index + 1][:-1]
@@ -64,9 +69,8 @@ def generate_wiggle(input_file, output_file, window_size, shift):
 
     with open(input_file, "r") as genome:
         result = open_results_file(input_file, output_file)
-        # read track line
+        # read title line
         wiggle_title = genome.readline().split(" ")
-
         write_title(wiggle_title)
 
         # add step info
