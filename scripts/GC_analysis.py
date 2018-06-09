@@ -1,10 +1,11 @@
 """
-A command-line utility for calculating the GC percentage of an input genomic sequence.
+A command-line utility for calculating the GC percentage of a genomic sequence.
 """
 
 import argparse as ap
 import os
 import sys
+import gzip
 
 
 def get_args():
@@ -22,19 +23,30 @@ def get_args():
                                                                         "omitted. Default behaviour is to retain "
                                                                         "the leftover sequence.",
                         default=False)
-    # parser.add_argument("-f", "--output_format", type=str, choices=["wiggle", "bigwig", "gzip"])
+    parser.add_argument("-f", "--output_format", type=str, choices=["wiggle",
+                                                                    # "bigwig",
+                                                                    "gzip"],
+                        default="wiggle")
     args = parser.parse_args()
 
-    return args.input_file, args.output_file, args.window_size, args.shift, args.omit_tail
+    return args.input_file, args.output_file, args.window_size, args.shift, args.omit_tail, args.output_format
 
 
-def generate_wiggle(input_file, output_file, window_size, shift, omit_tail):
+def generate_wiggle(input_file, output_file, window_size, shift, omit_tail, output_format):
     """Main function for generating the output file"""
     basepair_location = 1
     counter = 0
     total_percent = 0
     percentage_bp = (1.0 / window_size) * 100
     prev_bps = [""] * (window_size - shift)
+
+    if output_format == "wiggle":
+        def write_content(string):
+            result.write(string)
+            return 0
+    if output_format == "gzip":
+        def write_content(string):
+            result.write(bytes(string, "utf-8"))
 
     def percentage(byte):
         """Test the if the byte is G or C"""
@@ -46,7 +58,10 @@ def generate_wiggle(input_file, output_file, window_size, shift, omit_tail):
         """A helper function to create the output file in the input file location"""
         head, tail = os.path.split(input_file_name)
         if output_file_name:
-            file = open(os.path.join(head, output_file_name), "w+", newline="\n")
+            if output_format == "wiggle":
+                file = open(os.path.join(head, output_file_name), "w+", newline="\n")
+            elif output_format == "gzip":
+                file = gzip.open(os.path.join(head, output_file_name), "w+")
         else:
             file = sys.stdout
         return file
@@ -64,10 +79,10 @@ def generate_wiggle(input_file, output_file, window_size, shift, omit_tail):
         if "chromosome" in title:
             chrom_index = title.index("chromosome")
             chrom = title[chrom_index + 1][:-1]
-            result.write(title[0] + "Chrom=" + str(chrom) + "\n")
+            write_content(title[0] + " Chrom=" + str(chrom) + "\n")
         else:
             sys.stderr.write("WARNING! This fasta file does not contain chromosome information.")
-            result.write(title[0] + "\n")
+            write_content(title[0] + "\n")
 
     def base_test(counter_fun, total_percent_fun, basepair_location_fun):
         base = genome.read(1)
@@ -80,7 +95,7 @@ def generate_wiggle(input_file, output_file, window_size, shift, omit_tail):
                 prev_bps[counter_fun - shift - 1] = base
             # if reached window size, write percentage
             if counter_fun == window_size:
-                result.write(str(basepair_location_fun) + "  " + str(int(total_percent_fun)) + "\n")
+                write_content(str(basepair_location_fun) + "  " + str(int(total_percent_fun)) + "\n")
                 basepair_location_fun = basepair_location_fun + shift
                 counter_fun = window_size - shift
                 total_percent_fun = sum(percentage(x) for x in prev_bps)
@@ -91,8 +106,9 @@ def generate_wiggle(input_file, output_file, window_size, shift, omit_tail):
         elif base == "":
             # if end of file and still bp remains
             if counter_fun != 0 and not omit_tail:
-                result.write(str(basepair_location_fun) + "  " + str(int(total_percent_fun * window_size / counter_fun))
-                             + "\n")
+                write_content(str(basepair_location_fun) + "  " + str(int(total_percent_fun * window_size /
+                                                                          counter_fun))
+                              + "\n")
             return 0
         return counter_fun, total_percent_fun, basepair_location_fun
 
@@ -103,7 +119,7 @@ def generate_wiggle(input_file, output_file, window_size, shift, omit_tail):
         write_title(wiggle_title)
 
         # add step info
-        result.write("variableStep span=" + str(window_size) + "\n")
+        write_content("variableStep span=" + str(window_size) + "\n")
         
         for i in range(window_size):
             try:
