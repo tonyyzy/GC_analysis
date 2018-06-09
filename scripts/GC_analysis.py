@@ -57,8 +57,8 @@ def generate_wiggle(input_file, output_file, window_size, shift, omit_tail):
 
         # Check if the input file is in fasta format
         if title[0][0] != ">":
-            # print("WARNING! The input file is not in fasta format.")
-            raise TypeError("WARNING! The input file is not in fasta format.")
+            sys.stdout.write("WARNING! The input file is not in fasta format.")
+            raise TypeError()
 
         # Check if the input fasta file contains chromosome information
         if "chromosome" in title:
