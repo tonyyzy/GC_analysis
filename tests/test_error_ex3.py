@@ -7,7 +7,7 @@ import subprocess
 
 
 def test_error_ex3():
-    """Test_1"""
+    """test_error_ex3"""
     result = subprocess.run(["python3", "./scripts/GC_analysis.py",
                         "-i", "./tests/ex3.fasta",
                         "-o", "ex3.fasta.wig",

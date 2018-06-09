@@ -3,12 +3,16 @@ Test_1
 """
 
 import filecmp
-from scripts import GC_analysis
+import subprocess
 
 
 def test_1():
     """Test_1"""
-    GC_analysis.generate_wiggle("./tests/ex1.fasta", "ex1.fasta.wig", 5, 5, False)
+    subprocess.run(["python3", "./scripts/GC_analysis.py",
+                    "-i", "./tests/ex1.fasta",
+                    "-o", "ex1.fasta.wig",
+                    "-w", "5",
+                    "-s", "5"])
     assert filecmp.cmp("./tests/ex1.fasta.wig", "./tests/ex1_5_5.wig")
 
 
