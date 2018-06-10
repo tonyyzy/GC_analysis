@@ -1,5 +1,5 @@
 track type=wiggle_0 name=">ENA|A00145|A00145.1" description="B.taurus BoIFN-alpha A mRNA"
-variableStep span=5 
+variableStep span=5 chrom=chrNA
 1  40
 6  60
 11  40
