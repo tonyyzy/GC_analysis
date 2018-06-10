@@ -118,11 +118,6 @@ def generate_wiggle(input_file, output_file, window_size, shift, omit_tail, outp
         wiggle_title = genome.readline().split(" ")
         write_title(wiggle_title)
 
-        for i in range(window_size):
-            try:
-                counter, total_percent, basepair_location = base_test(counter, total_percent, basepair_location)
-            except TypeError:
-                break
         while True:
             try:
                 counter, total_percent, basepair_location = base_test(counter, total_percent, basepair_location)
