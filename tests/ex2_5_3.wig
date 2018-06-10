@@ -1,5 +1,5 @@
->some
-variableStep span=5
+track type=wiggle_0 name=">some" description="title stuff"
+variableStep span=5 
 1  0
 4  60
 7  100

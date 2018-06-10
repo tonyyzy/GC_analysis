@@ -43,8 +43,7 @@ def generate_wiggle(input_file, output_file, window_size, shift, omit_tail, outp
     if output_format == "wiggle":
         def write_content(string):
             result.write(string)
-            return 0
-    if output_format == "gzip":
+    elif output_format == "gzip":
         def write_content(string):
             result.write(bytes(string, "utf-8"))
 
@@ -72,7 +71,7 @@ def generate_wiggle(input_file, output_file, window_size, shift, omit_tail, outp
 
         # Check if the input file is in fasta format
         if title[0][0] != ">":
-            sys.stdout.write("WARNING! The input file is not in fasta format.")
+            sys.stdout.write("WARNING! The input file is not in fasta format.\n")
             raise TypeError()
 
         # Check if the input fasta file contains chromosome information
@@ -82,7 +81,7 @@ def generate_wiggle(input_file, output_file, window_size, shift, omit_tail, outp
             write_content("track type=wiggle_0 name={} description={}\n".format(title[0], " ".join(title[1:])))
             write_content("variableStep span={} chrom=chr{}\n".format(str(window_size), chrom))
         else:
-            sys.stderr.write("WARNING! This fasta file does not contain chromosome information.")
+            sys.stderr.write("WARNING! This fasta file does not contain chromosome information.\n")
             write_content("track type=wiggle_0 name=\"{}\" description=\"{}\"\n".format(title[0],
                                                                                         " ".join(title[1:]).strip()))
             write_content("variableStep span={} \n".format(str(window_size)))
