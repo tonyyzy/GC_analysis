@@ -2,3 +2,4 @@
 test*.wig
 .pytest_cache
 *.fasta.wig
+*.gz
