@@ -53,13 +53,13 @@ def generate_wiggle(input_file, output_file, window_size, shift, omit_tail, outp
             return percentage_bp
         return 0
 
-    def open_results_file(input_file_name, output_file_name):
+    def open_results_file(output_file_name):
         """A helper function to create the output file in the input file location"""
         if output_file_name:
             if output_format == "wiggle":
                 file = open(output_file_name, "w+", newline="\n")
             elif output_format == "gzip":
-                file = gzip.open(os.path.join(head, output_file_name), "w+")
+                file = gzip.open(os.path.join(output_file_name), "w+")
         else:
             file = sys.stdout
         return file
@@ -113,7 +113,7 @@ def generate_wiggle(input_file, output_file, window_size, shift, omit_tail, outp
         return counter_fun, total_percent_fun, basepair_location_fun
 
     with open(input_file, "r") as genome:
-        result = open_results_file(input_file, output_file)
+        result = open_results_file(output_file)
         # read title line
         wiggle_title = genome.readline().split(" ")
         write_title(wiggle_title)
