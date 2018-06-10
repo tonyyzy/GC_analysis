@@ -10,7 +10,7 @@ def test_1():
     """Test_1"""
     result = subprocess.run(["python3", "./scripts/GC_analysis.py",
                              "-i", "./tests/ex1.fasta",
-                             "-o", "ex1.fasta.wig",
+                             "-o", "./tests/ex1.fasta.wig",
                              "-w", "5",
                              "-s", "3"], stderr=subprocess.PIPE)
     assert filecmp.cmp("./tests/ex1.fasta.wig", "./tests/ex1_5_3.wig")

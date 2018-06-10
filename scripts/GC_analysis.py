@@ -55,10 +55,9 @@ def generate_wiggle(input_file, output_file, window_size, shift, omit_tail, outp
 
     def open_results_file(input_file_name, output_file_name):
         """A helper function to create the output file in the input file location"""
-        head, tail = os.path.split(input_file_name)
         if output_file_name:
             if output_format == "wiggle":
-                file = open(os.path.join(head, output_file_name), "w+", newline="\n")
+                file = open(output_file_name, "w+", newline="\n")
             elif output_format == "gzip":
                 file = gzip.open(os.path.join(head, output_file_name), "w+")
         else:
@@ -109,8 +108,7 @@ def generate_wiggle(input_file, output_file, window_size, shift, omit_tail, outp
             # if end of file and still bp remains
             if counter_fun != 0 and not omit_tail:
                 write_content(str(basepair_location_fun) + "  " + str(int(total_percent_fun * window_size /
-                                                                          counter_fun))
-                              + "\n")
+                                                                          counter_fun)) + "\n")
             return 0
         return counter_fun, total_percent_fun, basepair_location_fun
 
