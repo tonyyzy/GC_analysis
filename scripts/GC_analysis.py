@@ -78,13 +78,13 @@ def generate_wiggle(input_file, output_file, window_size, shift, omit_tail, outp
         if "chromosome" in title:
             chrom_index = title.index("chromosome")
             chrom = title[chrom_index + 1][:-1]
-            write_content("track type=wiggle_0 name={} description={}\n".format(title[0], " ".join(title[1:])))
-            write_content("variableStep span={} chrom=chr{}\n".format(str(window_size), chrom))
         else:
             sys.stderr.write("WARNING! This fasta file does not contain chromosome information.\n")
-            write_content("track type=wiggle_0 name=\"{}\" description=\"{}\"\n".format(title[0],
-                                                                                        " ".join(title[1:]).strip()))
-            write_content("variableStep span={} \n".format(str(window_size)))
+            chrom = "NA"
+
+        write_content("track type=wiggle_0 name=\"{}\" description=\"{}\"\n".format(title[0],
+                                                                                    " ".join(title[1:]).strip()))
+        write_content("variableStep span={} chrom=chr{}\n".format(str(window_size), chrom))
 
     def base_test(counter_fun, total_percent_fun, basepair_location_fun):
         base = genome.read(1)
@@ -119,7 +119,7 @@ def generate_wiggle(input_file, output_file, window_size, shift, omit_tail, outp
         # read title line
         wiggle_title = genome.readline().split(" ")
         write_title(wiggle_title)
-        
+
         for i in range(window_size):
             try:
                 counter, total_percent, basepair_location = base_test(counter, total_percent, basepair_location)
