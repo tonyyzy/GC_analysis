@@ -14,7 +14,6 @@ def test_1():
                              "-w", "5",
                              "-s", "3"], stderr=subprocess.PIPE)
     assert filecmp.cmp("./tests/ex1.fasta.wig", "./tests/ex1_5_3.wig")
-    assert result.stderr == b"WARNING! This fasta file does not contain chromosome information.\n"
 
 
 if __name__ == "__main__":
