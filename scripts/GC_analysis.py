@@ -73,17 +73,9 @@ def generate_wiggle(input_file, output_file, window_size, shift, omit_tail, outp
             sys.stdout.write("WARNING! The input file is not in fasta format.\n")
             raise TypeError()
 
-        # Check if the input fasta file contains chromosome information
-        if "chromosome" in title:
-            chrom_index = title.index("chromosome")
-            chrom = title[chrom_index + 1][:-1]
-        else:
-            sys.stderr.write("WARNING! This fasta file does not contain chromosome information.\n")
-            chrom = "NA"
-
-        write_content("track type=wiggle_0 name=\"{}\" description=\"{}\"\n".format(title[0],
-                                                                                    " ".join(title[1:]).strip()))
-        write_content("variableStep span={} chrom=chr{}\n".format(str(window_size), chrom))
+        write_content("track type=wiggle_0 name=\"GC percentage\" description=\"{}\"\n"
+                      .format(" ".join(title[1:]).strip()))
+        write_content("variableStep span={} chrom={}\n".format(str(window_size), title[0][1:]))
 
     def base_test(counter_fun, total_percent_fun, basepair_location_fun):
         base = genome.read(1)
