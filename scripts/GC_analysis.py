@@ -3,9 +3,10 @@ A command-line utility for calculating the GC percentage of a genomic sequence.
 """
 
 import argparse as ap
-import os
 import sys
 import gzip
+from Bio import SeqIO
+import pyBigWig
 
 
 def get_args():
@@ -24,7 +25,7 @@ def get_args():
                                                                         "the leftover sequence.",
                         default=False)
     parser.add_argument("-f", "--output_format", type=str, choices=["wiggle",
-                                                                    # "bigwig",
+                                                                    "bigwig",
                                                                     "gzip"],
                         default="wiggle")
     args = parser.parse_args()
@@ -32,91 +33,108 @@ def get_args():
     return args.input_file, args.output_file, args.window_size, args.shift, args.omit_tail, args.output_format
 
 
-def generate_wiggle(input_file, output_file, window_size, shift, omit_tail, output_format):
-    """Main function for generating the output file"""
-    basepair_location = 1
-    counter = 0
-    total_percent = 0
-    percentage_bp = (1.0 / window_size) * 100
-    prev_bps = [""] * (window_size - shift)
+def open_results_file():
+    """A helper function to create the output file in the input file location"""
+    if output_file:
+        if output_format == "wiggle":
+            file = open(output_file + ".wig", "w+", newline="\n")
+        elif output_format == "gzip":
+            file = gzip.open(output_file + ".wig.gz", "w+")
+        elif output_format == "bigwig":
+            file = pyBigWig.open(output_file + ".bw", "w+")
+    else:
+        file = sys.stdout
+    return file
 
+
+def open_results_files():
+    """A helper function to create the output file in the input file location"""
+    if output_file:
+        if output_format == "wiggle":
+            file = open(output_file + "_seq{}.wig".format(seq_num), "w+", newline="\n")
+        elif output_format == "gzip":
+            file = gzip.open(output_file + "_seq{}.wig.gz".format(seq_num), "w+")
+        elif output_format == "bigwig":
+            file = pyBigWig.open(output_file + "_seq{}.bw".format(seq_num), "w+")
+    else:
+        file = sys.stdout
+    return file
+
+
+def write_title():
+    """Parse the title from the fasta file and write the relevant information to the track definition line of the
+    wiggle file."""
+    trackline = "track type=wiggle_0 name=\"GC percentage\" description=\"{}\"\n".format(record.description)
+    variablestep = "variableStep span={} chrom={}\n".format(str(window_size), record.id)
     if output_format == "wiggle":
-        def write_content(string):
-            result.write(string)
+        result.write(trackline)
+        result.write(variablestep)
     elif output_format == "gzip":
-        def write_content(string):
-            result.write(bytes(string, "utf-8"))
+        result.write(bytes(trackline, "utf-8"))
+        result.write(bytes(variablestep, "utf-8"))
+    elif output_format == "bigwig":
+        result.addHeader([(record.id, len(record))])
 
-    def percentage(byte):
-        """Test the if the byte is G or C"""
-        if byte in ["G", "C"]:
-            return percentage_bp
-        return 0
 
-    def open_results_file(output_file_name):
-        """A helper function to create the output file in the input file location"""
-        if output_file_name:
-            if output_format == "wiggle":
-                file = open(output_file_name, "w+", newline="\n")
-            elif output_format == "gzip":
-                file = gzip.open(os.path.join(output_file_name), "w+")
-        else:
-            file = sys.stdout
-        return file
+def write_content(loc, data):
+    if output_format == "wiggle":
+        result.write(str(loc + 1) + "  " + str(data) + "\n")
+    elif output_format == "gzip":
+        result.write(bytes(str(loc + 1) + "  " + str(data) + "\n", "utf-8"))
+    elif output_format == "bigwig":
+        result.addEntries(record.id, [loc], values=[float(data)], span=window_size)
 
-    def write_title(title):
-        """Parse the title from the fasta file and write the relevant information to the track definition line of the
-        wiggle file."""
 
-        # Check if the input file is in fasta format
-        if title[0][0] != ">":
-            sys.stdout.write("WARNING! The input file is not in fasta format.\n")
-            raise TypeError()
-
-        write_content("track type=wiggle_0 name=\"GC percentage\" description=\"{}\"\n"
-                      .format(" ".join(title[1:]).strip()))
-        write_content("variableStep span={} chrom={}\n".format(str(window_size), title[0][1:]))
-
-    def base_test(counter_fun, total_percent_fun, basepair_location_fun):
-        base = genome.read(1)
-        # if not EOF and not newline
-        if base not in ["", " ", "\n", "\r", ">"]:
-            counter_fun += 1
-            total_percent_fun += percentage(base)
-            # print(total_percent)
-            if counter_fun > shift:
-                prev_bps[counter_fun - shift - 1] = base
-            # if reached window size, write percentage
-            if counter_fun == window_size:
-                write_content(str(basepair_location_fun) + "  " + str(int(total_percent_fun)) + "\n")
-                basepair_location_fun = basepair_location_fun + shift
-                counter_fun = window_size - shift
-                total_percent_fun = sum(percentage(x) for x in prev_bps)
-        elif base == ">":
-            sys.stderr.write("WARNING! This fasta file contains more than one sequence. Only the first sequence is "
-                             "processed.")
-            return 0
-        elif base == "":
-            # if end of file and still bp remains
-            if counter_fun != 0 and not omit_tail:
-                write_content(str(basepair_location_fun) + "  " + str(int(total_percent_fun * window_size /
-                                                                          counter_fun)) + "\n")
-            return 0
-        return counter_fun, total_percent_fun, basepair_location_fun
-
-    with open(input_file, "r") as genome:
-        result = open_results_file(output_file)
-        # read title line
-        wiggle_title = genome.readline().split(" ")
-        write_title(wiggle_title)
-
-        while True:
-            try:
-                counter, total_percent, basepair_location = base_test(counter, total_percent, basepair_location)
-            except TypeError:
-                break
+def generate_result():
+    seq_len = len(record)
+    for i in range((seq_len - window_size + shift) // shift):
+        frag = record.seq[i * shift: i * shift + window_size]
+        percent = round((frag.count("C") + frag.count("G")) / window_size * 100)
+        write_content(i * shift, percent)
+    if (i + 1) * shift < seq_len and not omit_tail:
+        frag = record.seq[(i + 1) * shift:]
+        percent = round((frag.count("C") + frag.count("G")) / len(frag) * 100)
+        write_content((i + 1) * shift, percent)
     result.close()
 
 
 if __name__ == "__main__":
-    generate_wiggle(*get_args()[:])
+    error = []
+    input_file, output_file, window_size, shift, omit_tail, output_format = get_args()[:]
+    new_output_format = output_format
+    if output_format != "wiggle" and output_file is None:
+        sys.stderr.write("WARNING! An output filename is needed to save output as {}. "
+                         "The result is shown below:\n".format(output_format))
+        error.append("WARNING! An output filename is needed to save output as {}. "
+                     "The result is shown above.\n".format(output_format))
+        new_output_format = "wiggle"
+
+    if output_format == "bigwig" and window_size > shift:
+        sys.stderr.write("WARNING! BigWig file does not allow overlapped items. "
+                         "A wiggle file will be generated instead.\n")
+        error.append("WARNING! BigWig file does not allow overlapped items. A wiggle file was generated instead.\n")
+        new_output_format = "wiggle"
+
+    output_format = new_output_format
+
+    records = SeqIO.index(input_file, "fasta")
+    records_num = len(records)
+    if records_num < 1:
+        sys.stdout.write("WARNING! {} contains no sequence data.\n".format(input_file))
+        raise TypeError
+    elif records_num == 1:
+        record = records[records.keys().__next__()]
+        result = open_results_file()
+        write_title()
+        generate_result()
+    else:
+        seq_num = 0
+        for key in records.keys():
+            seq_num += 1
+            record = records[key]
+            result = open_results_files()
+            write_title()
+            generate_result()
+    if output_file is None:
+        for err in error:
+            sys.stderr.write(err)
