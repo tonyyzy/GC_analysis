@@ -14,13 +14,11 @@
 #
 import os
 import sys
+from mock import Mock
+
+sys.modules['pyBigWig'] = Mock()
+
 sys.path.insert(0, os.path.abspath('../'))
-import mock
-
-MOCK_MODULES = ['pyBigWig']
-for mod_name in MOCK_MODULES:
-  sys.modules[mod_name] = mock.Mock()
-
 # -- Project information -----------------------------------------------------
 
 project = 'GC_analysis'
