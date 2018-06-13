@@ -9,10 +9,10 @@ import subprocess
 def test_1():
     """Test_1"""
     subprocess.run(["python3", "./scripts/GC_analysis.py",
-                             "-i", "./tests/ex2.fasta",
-                             "-o", "./tests/ex2_5_5_test",
-                             "-w", "5",
-                             "-s", "5"])
+                    "-i", "./tests/ex2.fasta",
+                    "-o", "./tests/ex2_5_5_test",
+                    "-w", "5",
+                    "-s", "5"])
     assert filecmp.cmp("./tests/ex2_5_5_test.wig", "./tests/ex2_5_5.wig")
 
 

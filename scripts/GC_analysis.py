@@ -88,7 +88,6 @@ def write_content(loc, data):
 if __name__ == "__main__":
     input_file, output_file, window_size, shift, omit_tail, output_format = get_args()[:]
 
-
     if output_format is not "wiggle" and output_file is None:
         sys.stderr.write("WARNING! An output filename is needed to save output as {}.\n"
                          "The result is shown below:\n".format(output_format))
