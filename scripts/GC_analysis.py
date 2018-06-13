@@ -85,13 +85,37 @@ def write_content(loc, data):
         result.addEntries(record.id, [loc], values=[float(data)], span=window_size)
 
 
-if __name__ == "__main__":
-    input_file, output_file, window_size, shift, omit_tail, output_format = get_args()[:]
+def generate_result():
+    seq_len = len(record)
+    for i in range((seq_len - window_size + shift) // shift):
+        frag = record.seq[i * shift: i * shift + window_size]
+        percent = round((frag.count("C") + frag.count("G")) / window_size * 100)
+        write_content(i * shift, percent)
+    if (i + 1) * shift < seq_len and not omit_tail:
+        frag = record.seq[(i + 1) * shift:]
+        percent = round((frag.count("C") + frag.count("G")) / len(frag) * 100)
+        write_content((i + 1) * shift, percent)
+    result.close()
 
-    if output_format is not "wiggle" and output_file is None:
-        sys.stderr.write("WARNING! An output filename is needed to save output as {}.\n"
+
+if __name__ == "__main__":
+    error = []
+    input_file, output_file, window_size, shift, omit_tail, output_format = get_args()[:]
+    new_output_format = output_format
+    if output_format != "wiggle" and output_file is None:
+        sys.stderr.write("WARNING! An output filename is needed to save output as {}. "
                          "The result is shown below:\n".format(output_format))
-        output_format = "wiggle"
+        error.append("WARNING! An output filename is needed to save output as {}. "
+                     "The result is shown above.\n".format(output_format))
+        new_output_format = "wiggle"
+
+    if output_format == "bigwig" and window_size > shift:
+        sys.stderr.write("WARNING! BigWig file does not allow overlapped items. "
+                         "A wiggle file will be generated instead.\n")
+        error.append("WARNING! BigWig file does not allow overlapped items. A wiggle file was generated instead.\n")
+        new_output_format = "wiggle"
+
+    output_format = new_output_format
 
     records = SeqIO.index(input_file, "fasta")
     records_num = len(records)
@@ -102,16 +126,7 @@ if __name__ == "__main__":
         record = records[records.keys().__next__()]
         result = open_results_file()
         write_title()
-        seq_len = len(record)
-        for i in range((seq_len - window_size + shift) // shift):
-            frag = record.seq[i * shift: i * shift + window_size]
-            percent = round((frag.count("C") + frag.count("G")) / window_size * 100)
-            write_content(i * shift, percent)
-        if (i + 1) * shift < seq_len and not omit_tail:
-            frag = record.seq[(i + 1) * shift:]
-            percent = round((frag.count("C") + frag.count("G")) / len(frag) * 100)
-            write_content((i + 1) * shift, percent)
-        result.close()
+        generate_result()
     else:
         seq_num = 0
         for key in records.keys():
@@ -119,13 +134,7 @@ if __name__ == "__main__":
             record = records[key]
             result = open_results_files()
             write_title()
-            seq_len = len(record)
-            for i in range((seq_len - window_size + shift) // shift):
-                frag = record.seq[i * shift: i * shift + window_size]
-                percent = round((frag.count("C") + frag.count("G"))/window_size * 100, 0)
-                write_content(i * shift, percent)
-            if (i + 1) * shift < seq_len and not omit_tail:
-                frag = record.seq[(i + 1) * shift:]
-                percent = round((frag.count("C") + frag.count("G")) / len(frag) * 100)
-                write_content((i + 1) * shift, percent)
-            result.close()
+            generate_result()
+    if output_file is None:
+        for err in error:
+            sys.stderr.write(err)
