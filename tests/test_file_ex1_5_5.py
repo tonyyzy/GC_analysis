@@ -16,5 +16,6 @@ def test_1():
     assert filecmp.cmp("./tests/ex1_5_5_test.wig", "./tests/ex1_5_5.wig")
 
 
+
 if __name__ == "__main__":
     test_1()
