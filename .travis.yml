@@ -19,9 +19,7 @@ before_install:
   - chmod +x ./scripts/travis/pylint_harness.sh
 # command to install dependencies
 install:
-#     - pip install .
-#     - pip install -r requirements.txt
-    - pip install Biopython pyBigWig
+    - pip install -r requirements.txt
     - if [[ "$TESTENV" == "docs" ]]; then pip install sphinx;fi
     - if [[ "$TESTENV" == "pylint" ]]; then pip install pylint;fi
     - if [[ "$TESTENV" == "build" ]]; then pip install pyinstaller;fi
