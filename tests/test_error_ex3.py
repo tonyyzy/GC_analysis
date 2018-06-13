@@ -18,7 +18,7 @@ def test_error_ex3():
 
     assert result.returncode == 1
 
-    assert result.stdout == b"WARNING! The input file is not in fasta format.\n"
+    assert result.stdout[-28:] == b" contains no sequence data.\n"
 
 
 if __name__ == "__main__":

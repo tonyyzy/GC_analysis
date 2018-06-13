@@ -66,10 +66,10 @@ def write_title():
     wiggle file."""
     trackline = "track type=wiggle_0 name=\"GC percentage\" description=\"{}\"\n".format(record.description)
     variablestep = "variableStep span={} chrom={}\n".format(str(window_size), record.id)
-    if output_format is "wiggle":
+    if output_format == "wiggle":
         result.write(trackline)
         result.write(variablestep)
-    elif output_format is "gzip":
+    elif output_format == "gzip":
         result.write(bytes(trackline, "utf-8"))
         result.write(bytes(variablestep, "utf-8"))
     elif output_format == "bigwig":
@@ -97,7 +97,8 @@ if __name__ == "__main__":
     records = SeqIO.index(input_file, "fasta")
     records_num = len(records)
     if records_num < 1:
-        sys.stderr.write("WARNING! {} contains no sequence data.".format(input_file))
+        sys.stdout.write("WARNING! {} contains no sequence data.\n".format(input_file))
+        raise TypeError
     elif records_num == 1:
         record = records[records.keys().__next__()]
         result = open_results_file()
@@ -108,7 +109,7 @@ if __name__ == "__main__":
             percent = round((frag.count("C") + frag.count("G")) / window_size * 100)
             write_content(i * shift, percent)
         if (i + 1) * shift < seq_len and not omit_tail:
-            frag = record.seq[(i + 1) * shift - 1:]
+            frag = record.seq[(i + 1) * shift:]
             percent = round((frag.count("C") + frag.count("G")) / len(frag) * 100)
             write_content((i + 1) * shift, percent)
         result.close()
@@ -124,4 +125,8 @@ if __name__ == "__main__":
                 frag = record.seq[i * shift: i * shift + window_size]
                 percent = round((frag.count("C") + frag.count("G"))/window_size * 100, 0)
                 write_content(i * shift, percent)
+            if (i + 1) * shift < seq_len and not omit_tail:
+                frag = record.seq[(i + 1) * shift:]
+                percent = round((frag.count("C") + frag.count("G")) / len(frag) * 100)
+                write_content((i + 1) * shift, percent)
             result.close()
