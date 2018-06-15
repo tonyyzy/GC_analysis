@@ -10,7 +10,36 @@ import pyBigWig
 
 
 def get_args():
-    """Helper function to handler all the command-line input options"""
+    """
+    Helper function uses ArgParser to handler all the command-line input options.
+    All arguments are keyword arguments. The required arguments are grouped under "required named arguments" section in
+    help (-h).
+
+    required named arguments:
+
+    -i INPUT_FILE, --input_file INPUT_FILE
+    INPUTFILE: Name of the input file in FASTA format
+
+    -w WINDOW_SIZE, --window_size WINDOW_SIZE
+    WINDOW_SIZE: Number of base pairs that the GC percentage is calculated for
+
+    -s SHIFT, --shift SHIFT
+    SHIFT: The shift increment (step size)
+
+    optional arguments:
+
+    -h, --help
+    Show the help message and exit
+
+    -o OUTPUT_FILE, --output_file OUTPUT_FILE
+    OUTPUT_FILE: Name of the output file
+
+    -ot, --omit_tail
+    Use if the trailing sequence should be omitted. Default behaviour is to retain the leftover sequence.
+
+    -f {wiggle,bigwig,gzip}, --output_format {wiggle,bigwig,gzip}
+    Choose output formats from wiggle, bigwig or gzip compressed wiggle file.
+    """
     parser = ap.ArgumentParser()
     requiredNamed = parser.add_argument_group('required named arguments')
     requiredNamed.add_argument("-i", "--input_file", type=str, help="Name of the input file in FASTA format",
@@ -138,3 +167,4 @@ if __name__ == "__main__":
     if output_file is None:
         for err in error:
             sys.stderr.write(err)
+s
