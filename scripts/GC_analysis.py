@@ -107,9 +107,9 @@ def write_title():
 
 def write_content(loc, data):
     if output_format == "wiggle":
-        result.write(str(loc + 1) + "  " + str(data) + "\n")
+        result.write(str(loc + 1) + "\t" + str(data) + "\n")
     elif output_format == "gzip":
-        result.write(bytes(str(loc + 1) + "  " + str(data) + "\n", "utf-8"))
+        result.write(bytes(str(loc + 1) + "\t" + str(data) + "\n", "utf-8"))
     elif output_format == "bigwig":
         result.addEntries(record.id, [loc], values=[float(data)], span=window_size)
 
