@@ -16,6 +16,7 @@ def test_1():
                     "-ot",
                     "-f", "bigwig"])
     subprocess.run(["wget", "http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bigWigToWig"])
+    subprocess.run(["ls", "-a"])
     subprocess.run(["./bigWigToWig", "./tests/ex1_5_5_ot_bw_test.bw", "./tests/ex1_5_5_ot_bw_test.wig"])
     assert filecmp.cmp("./tests/ex1_5_5_ot_bw_test.wig", "./tests/ex1_5_5_ot_bw.wig")
 
