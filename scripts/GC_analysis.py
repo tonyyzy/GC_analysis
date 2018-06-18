@@ -131,17 +131,18 @@ if __name__ == "__main__":
     error = []  # Store generated error message, and write to stderr at the end of stdout output
     input_file, output_file, window_size, shift, omit_tail, output_format = get_args()[:]
     new_output_format = output_format
-    if output_format != "wiggle" and output_file is None:
-        sys.stderr.write("WARNING! An output filename is needed to save output as {}. "
-                         "The result is shown below:\n".format(output_format))
-        error.append("WARNING! An output filename is needed to save output as {}. "
-                     "The result is shown above.\n".format(output_format))
-        new_output_format = "wiggle"
 
     if output_format == "bigwig" and window_size > shift:
         sys.stderr.write("WARNING! BigWig file does not allow overlapped items. "
                          "A wiggle file will be generated instead.\n")
         error.append("WARNING! BigWig file does not allow overlapped items. A wiggle file was generated instead.\n")
+        new_output_format = "wiggle"
+
+    if output_format != "wiggle" and output_file is None:
+        sys.stderr.write("WARNING! An output filename is needed to save output as {}. "
+                         "The result is shown below:\n".format(output_format))
+        error.append("WARNING! An output filename is needed to save output as {}. "
+                     "The result is shown above.\n".format(output_format))
         new_output_format = "wiggle"
 
     output_format = new_output_format
