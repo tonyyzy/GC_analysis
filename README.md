@@ -3,9 +3,9 @@
 A command-line utility for calculating GC percentages of genome sequences
 
 # Quick starter
-Calculate the GC content of chromosome 17 of the human reference genome with window size (or span) = 5 and shift (or step) = 5. Input fasta file is `GRCh38-Chrom17.fasta` and output wiggle file is `CRCh38-Chrom17.wig`. Note that the output file's extension is added by the program.
+Calculate the GC content of chromosome 17 of the human reference genome with window size (or span) = 5 and shift (or step) = 5. Input fasta file is `GRCh38-Chrom17.fasta` and output wiggle file is `GRCh38-Chrom17.wig`. Note that the output file's extension is added by the program.
 ```
-~ $ GC_analysis -i GRCh38-Chrom17.fasta -w 5 -s 5 -o CRCh38-Chrom17
+~ $ GC_analysis -i GRCh38-Chrom17.fasta -w 5 -s 5 -o GRCh38-Chrom17
 ```
 
 # Command-line options
@@ -43,7 +43,7 @@ Choose output formats from wiggle, bigwig or gzip compressed wiggle file.
 ## Example usage
 1. Calculate the GC content of chromosome 17 of the human reference genome, the percentage is calculated over five base pairs (window_size), and the window is shifted by five base pairs every time (i.e. there is no overlapping base paires in each entry).
 ```
-~ $ GC_analysis -i GRCh38-Chrom17.fasta -w 5 -s 5 -o CRCh38-Chrom17
+~ $ GC_analysis -i GRCh38-Chrom17.fasta -w 5 -s 5 -o GRCh38-Chrom17
 ```
 
 2. By default, the GC percentage of the trailing sequence is calculated and appended to the end of the output file. For example, with the following input
@@ -71,4 +71,44 @@ will generate output file `without_tail` with the following content
 track type=wiggle_0 name="GC percentage" description="chr1"
 variableStep chrom=chr1 span=5
 1	0
+```
+
+3. The program support three output file formats, wiggle, bigwig and gzip compressed wiggle file.
+Wiggle output file follows the [UCSC variableStep format definition](https://genome.ucsc.edu/goldenpath/help/wiggle.html). Wiggle file is the default output format. The output format can be changed with `-f` or `--format` option.
+```
+~ $ GC_analysis -i GRCh38-Chrom17.fasta -w 5 -s 5 -o GRCh38-Chrom17
+```
+and
+```
+~ $ GC_analysis -i GRCh38-Chrom17.fasta -w 5 -s 5 -o GRCh38-Chrom17 -f wiggle
+```
+will generate `GRCh38-Chrom17.wig` as the output file.
+
+```
+~ $ GC_analysis -i GRCh38-Chrom17.fasta -w 5 -s 5 -o GRCh38-Chrom17 -f gzip
+```
+will generate `GRCh38-Chrom17.wig.gz` as the output file. Decompress `GRCh38-Chrom17.wig.gz` will give you the same wiggle file as choosing wiggle as the output format.
+
+```
+~ $ GC_analysis -i GRCh38-Chrom17.fasta -w 5 -s 5 -o GRCh38-Chrom17 -f bigwig
+```
+will generate `GRCh38-Chrom17.bw` as the output file. It should be noted that bigwig format does not allow overlapping bases, which means that `-w 5 -s 3` is an invalid option with choosing bigwig as the output format. In this case, where shift is smaller than window size and bigwig format is specified, the program will generate a wiggle file instead and output a warning message.
+
+```
+~ $ GC_analysis -i GRCh38-Chrom17.fasta -w 5 -s 3 -o GRCh38-Chrom17 -f bigwig
+WARNING! BigWig file does not allow overlapped items. A wiggle file was generated instead.
+```
+
+4. If an output filename is not given, the result will be written to stdout. If the output filename is not given and a file format other than wiggle was chosen, the program will automatically output the result to stdout and give you a warning before and after the result.
+Eg. 
+```
+GC_analysis -i example1.fasta -w 5 -s 3 -f bigwig
+WARNING! BigWig file does not allow overlapped items. A wiggle file will be generated instead.
+WARNING! An output filename is needed to save output as bigwig. The result is shown below:
+track type=wiggle_0 name="GC percentage" description="chr1"
+variableStep chrom=chr1 span=5
+1       0
+4       50
+WARNING! BigWig file does not allow overlapped items. A wiggle file was generated instead.
+WARNING! An output filename is needed to save output as bigwig. The result is shown above.
 ```
