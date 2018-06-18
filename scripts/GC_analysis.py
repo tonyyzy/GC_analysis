@@ -128,7 +128,7 @@ def generate_result():
 
 
 if __name__ == "__main__":
-    error = []
+    error = []  # Store generated error message, and write to stderr at the end of stdout output
     input_file, output_file, window_size, shift, omit_tail, output_format = get_args()[:]
     new_output_format = output_format
     if output_format != "wiggle" and output_file is None:
@@ -167,4 +167,3 @@ if __name__ == "__main__":
     if output_file is None:
         for err in error:
             sys.stderr.write(err)
-s
