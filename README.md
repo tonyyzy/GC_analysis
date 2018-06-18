@@ -3,27 +3,41 @@
 A command-line utility for calculating GC percentages of genome sequences
 
 # Quick starter
+Calculate the GC content of chromosome 17 of the human reference genome with window size (or span) = 5 and shift (or step) = 5. Input fasta file is `GRCh38-Chrom17.fasta` and output wiggle file is `CRCh38-Chrom17.wig`. Note that the output file's extension is added by the program.
+```
+~ $ GC_analysis -i GRCh38-Chrom17.fasta -w 5 -s 5 -o CRCh38-Chrom17
+```
+
+# Command-line options
 ```
 ~ $ GC_analysis -h
 usage: GC_analysis [-h] -i INPUT_FILE -w WINDOW_SIZE -s SHIFT [-o OUTPUT_FILE]
-                   [-ot] [-f {wiggle,gzip}]
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -o OUTPUT_FILE, --output_file OUTPUT_FILE
-                        Name of the output file
-  -ot, --omit_tail      True: if the trailing sequence should be omitted.
-                        Default behaviour is to retain the leftover sequence.
-  -f {wiggle,gzip}, --output_format {wiggle,gzip}
+                   [-ot] [-f {wiggle,gzip,bigwig}]
 
 required named arguments:
-  -i INPUT_FILE, --input_file INPUT_FILE
-                        Name of the input file in FASTA format
-  -w WINDOW_SIZE, --window_size WINDOW_SIZE
-                        Number of base pairs where the GC percentage is
-                        calculated for
-  -s SHIFT, --shift SHIFT
-                        The shift increment
+
+-i INPUT_FILE, --input_file INPUT_FILE
+INPUTFILE: Name of the input file in FASTA format
+
+-w WINDOW_SIZE, --window_size WINDOW_SIZE
+WINDOW_SIZE: Number of base pairs that the GC percentage is calculated for
+
+-s SHIFT, --shift SHIFT
+SHIFT: The shift increment (step size)
+
+optional arguments:
+
+-h, --help
+Show the help message and exit
+
+-o OUTPUT_FILE, --output_file OUTPUT_FILE
+OUTPUT_FILE: Name of the output file
+
+-ot, --omit_tail
+Use if the trailing sequence should be omitted. Default behaviour is to retain the leftover sequence.
+
+-f {wiggle,bigwig,gzip}, --output_format {wiggle,bigwig,gzip}
+Choose output formats from wiggle, bigwig or gzip compressed wiggle file.
 
 ```
 ## Example usage
