@@ -15,6 +15,8 @@ env:
         - TESTENV=build
 
 before_install:
+  - wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bigWigToWig
+  - chmod +x ./bigWigToWig
   - chmod +x ./scripts/travis/docs_harness.sh
   - chmod +x ./scripts/travis/pylint_harness.sh
 # command to install dependencies
