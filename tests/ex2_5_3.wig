@@ -1,5 +1,5 @@
 track type=wiggle_0 name="GC percentage" description="chr1 a sequence"
-variableStep span=5 chrom=chr1
+variableStep chrom=chr1 span=5
 1  0
 4  60
 7  100

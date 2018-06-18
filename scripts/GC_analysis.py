@@ -94,7 +94,7 @@ def write_title():
     """Parse the title from the fasta file and write the relevant information to the track definition line of the
     wiggle file."""
     trackline = "track type=wiggle_0 name=\"GC percentage\" description=\"{}\"\n".format(record.description)
-    variablestep = "variableStep span={} chrom={}\n".format(str(window_size), record.id)
+    variablestep = "variableStep chrom={} span={}\n".format(record.id, str(window_size))
     if output_format == "wiggle":
         result.write(trackline)
         result.write(variablestep)

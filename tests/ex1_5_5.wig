@@ -1,5 +1,5 @@
 track type=wiggle_0 name="GC percentage" description="ENA|A00145|A00145.1 B.taurus BoIFN-alpha A mRNA"
-variableStep span=5 chrom=ENA|A00145|A00145.1
+variableStep chrom=ENA|A00145|A00145.1 span=5
 1  40
 6  60
 11  40
