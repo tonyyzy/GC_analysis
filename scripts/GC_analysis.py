@@ -112,7 +112,7 @@ def open_results_files():
     and NUM is the ordinal number of the sequence.
 
     If output filename is not specified, the result will be written to stdout following wiggle format.
-    
+
     :return: file object
     """
     if output_file:
@@ -128,8 +128,10 @@ def open_results_files():
 
 
 def write_title():
-    """Parse the title from the fasta file and write the relevant information to the track definition line of the
-    wiggle file."""
+    """Write information to the track definition line of the wiggle file.
+    :return: None
+    """
+
     trackline = "track type=wiggle_0 name=\"GC percentage\" description=\"{}\"\n".format(record.description)
     variablestep = "variableStep chrom={} span={}\n".format(record.id, str(window_size))
     if output_format == "wiggle":
@@ -142,13 +144,21 @@ def write_title():
         result.addHeader([(record.id, len(record))])
 
 
-def write_content(loc, data):
+def generate_write_content():
+    """
+    Generate a write_content function to handle writing results to output file.
+    :return: function
+    """
     if output_format == "wiggle":
-        result.write(str(loc + 1) + "\t" + str(data) + "\n")
+        def content(loc, data):
+            result.write(str(loc + 1) + "\t" + str(data) + "\n")
     elif output_format == "gzip":
-        result.write(bytes(str(loc + 1) + "\t" + str(data) + "\n", "utf-8"))
+        def content(loc, data):
+            result.write(bytes(str(loc + 1) + "\t" + str(data) + "\n", "utf-8"))
     elif output_format == "bigwig":
-        result.addEntries(record.id, [loc], values=[float(data)], span=window_size)
+        def content(loc, data):
+            result.addEntries(record.id, [loc], values=[float(data)], span=window_size)
+    return content
 
 
 def generate_result():
@@ -186,6 +196,7 @@ if __name__ == "__main__":
 
     records = SeqIO.index(input_file, "fasta")
     records_num = len(records)
+    write_content = generate_write_content()
     if records_num < 1:
         sys.stdout.write("WARNING! {} contains no sequence data.\n".format(input_file))
         raise TypeError
