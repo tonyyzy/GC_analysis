@@ -39,6 +39,8 @@ def get_args():
 
     -f {wiggle,bigwig,gzip}, --output_format {wiggle,bigwig,gzip}
     Choose output formats from wiggle, bigwig or gzip compressed wiggle file.
+
+    :returns: str, str/None, int, int, Bool, str
     """
     parser = ap.ArgumentParser()
     requiredNamed = parser.add_argument_group('required named arguments')
@@ -63,7 +65,22 @@ def get_args():
 
 
 def open_results_file():
-    """A helper function to create the output file in the input file location"""
+    """
+    A helper function to create the output file based on chosen output format and specified output filename.
+
+    If output filename is given and output format is "wiggle", a text file called "OUTPUT_FILENAME.wig" will be opened
+    with python's textIO wrapper, where OUTPUT_FILENAME is the string given after "-o" option in the commandline.
+
+    If output filename is given and output format is "gzip", a compressed file called "OUTPUT_FILENAME.gz" will be
+    opened with gzip library, where OUTPUT_FILENAME is the string given after "-o" option in the commandline.
+
+    If output filename is given and output format is "bigwig", a binary file called "OUTPUT_FILENAME.bw" will be
+    opened with pyBigWig, where OUTPUT_FILENAME is the string given after "-o" option in the commandline.
+
+    If output filename is not specified, the result will be written to stdout following wiggle format.
+
+    :return: file object
+    """
     if output_file:
         if output_format == "wiggle":
             file = open(output_file + ".wig", "w+", newline="\n")
@@ -77,7 +94,27 @@ def open_results_file():
 
 
 def open_results_files():
-    """A helper function to create the output file in the input file location"""
+    """
+    A helper function to create the output file based on chosen output format and specified output filename. Used when
+    multiple sequences present in one input file. "_seqNUM" will be added to the end of the output filename before the
+    file extension.
+
+    If output filename is given and output format is "wiggle", a text file called "OUTPUT_FILENAME_seqNUM.wig" will be
+    opened with python's textIO wrapper, where OUTPUT_FILENAME is the string given after "-o" option in the commandline
+    and NUM is the ordinal number of the sequence.
+
+    If output filename is given and output format is "gzip", a compressed file called "OUTPUT_FILENAME_seqNUM.gz" will
+    be opened with gzip library, where OUTPUT_FILENAME is the string given after "-o" option in the commandline
+    and NUM is the ordinal number of the sequence.
+
+    If output filename is given and output format is "bigwig", a binary file called "OUTPUT_FILENAME_seqNUM.bw" will be
+    opened with pyBigWig, where OUTPUT_FILENAME is the string given after "-o" option in the commandline
+    and NUM is the ordinal number of the sequence.
+
+    If output filename is not specified, the result will be written to stdout following wiggle format.
+    
+    :return: file object
+    """
     if output_file:
         if output_format == "wiggle":
             file = open(output_file + "_seq{}.wig".format(seq_num), "w+", newline="\n")
