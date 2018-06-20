@@ -162,12 +162,18 @@ def generate_write_content():
 
 
 def generate_result():
-    seq_len = len(record)
-    for i in range((seq_len - window_size + shift) // shift):
-        frag = record.seq[i * shift: i * shift + window_size]
+    """
+    Calculate GC percentage and write to output file.
+    :return: None
+    """
+    seq_len = len(record)  # Get length of sequence
+    for i in range((seq_len - window_size + shift) // shift):  # Iterate over the total number of shifts
+        frag = record.seq[i * shift: i * shift + window_size]  # Extract the string for counting
+        # Count number of C and G and convert to percentage
         percent = round((frag.count("C") + frag.count("G")) / window_size * 100)
         write_content(i * shift, percent)
     if (i + 1) * shift < seq_len and not omit_tail:
+        # if trailing sequence exits and omit_tail is False
         frag = record.seq[(i + 1) * shift:]
         percent = round((frag.count("C") + frag.count("G")) / len(frag) * 100)
         write_content((i + 1) * shift, percent)
