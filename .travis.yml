@@ -34,7 +34,7 @@ script:
     - if [[ "$TESTENV" == "code" ]]; then pytest tests; fi
     - if [[ "$TESTENV" == "docs" ]]; then ./scripts/travis/docs_harness.sh; fi
     - if [[ "$TESTENV" == "pylint" ]]; then ./scripts/travis/pylint_harness.sh; fi
-    - if [[ "$TESTENV" == "build" ]]; then pyinstaller --onefile ./scripts/GC_analysis.py; docker build -t gc_analysis .; fi
+    - if [[ "$TESTENV" == "build" ]]; then pyinstaller --onefile ./scripts/GC_analysis.py; docker build -t gc_analysis .; echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin; fi
 
 deploy:
   provider: releases
@@ -42,5 +42,10 @@ deploy:
   file: ./dist/GC_analysis
   api_key: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
   keep-history: true
+  on:
+    tags: true
+
+  provider: script
+  script: bash docker_push
   on:
     tags: true
