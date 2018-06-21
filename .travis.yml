@@ -34,7 +34,7 @@ script:
     - if [[ "$TESTENV" == "code" ]]; then pytest tests; fi
     - if [[ "$TESTENV" == "docs" ]]; then ./scripts/travis/docs_harness.sh; fi
     - if [[ "$TESTENV" == "pylint" ]]; then ./scripts/travis/pylint_harness.sh; fi
-    - if [[ "$TESTENV" == "build" ]]; then pyinstaller --onefile ./scripts/GC_analysis.py; echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin; docker build -t tonyyzy/gc_analysis .; fi
+    - if [[ "$TESTENV" == "build" ]]; then pyinstaller --onefile ./scripts/GC_analysis.py; docker build -t tonyyzy/gc_analysis .; fi
 
 deploy:
   provider: releases
