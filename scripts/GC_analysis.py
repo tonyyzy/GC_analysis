@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 A command-line utility for calculating the GC percentage of a genomic sequence.
 """
