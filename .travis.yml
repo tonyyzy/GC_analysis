@@ -46,6 +46,6 @@ deploy:
     tags: true
 
   provider: script
-  script: bash docker_push
+  script: bash ./scripts/travis/docker_push.sh
   on:
     tags: true
