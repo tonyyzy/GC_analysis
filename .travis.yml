@@ -1,9 +1,12 @@
 language: python
 
+sudo: required
 os: linux
 dist: trusty
 group: edge
 
+services:
+    - docker
 python:
     - "3.6"
 
@@ -31,7 +34,7 @@ script:
     - if [[ "$TESTENV" == "code" ]]; then pytest tests; fi
     - if [[ "$TESTENV" == "docs" ]]; then ./scripts/travis/docs_harness.sh; fi
     - if [[ "$TESTENV" == "pylint" ]]; then ./scripts/travis/pylint_harness.sh; fi
-    - if [[ "$TESTENV" == "build" ]]; then pyinstaller --onefile ./scripts/GC_analysis.py; fi
+    - if [[ "$TESTENV" == "build" ]]; then pyinstaller --onefile ./scripts/GC_analysis.py; docker build -t gc_analysis .; fi
 
 deploy:
   provider: releases
