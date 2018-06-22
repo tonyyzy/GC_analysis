@@ -37,15 +37,15 @@ script:
     - if [[ "$TESTENV" == "build" ]]; then pyinstaller --onefile ./scripts/GC_analysis.py; docker build -t tonyyzy/gc_analysis .; fi
 
 deploy:
-  provider: releases
-  skip-cleanup: true
-  file: ./dist/GC_analysis
-  api_key: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
-  keep-history: true
-  on:
-    tags: true
+  - provider: releases
+    skip-cleanup: true
+    file: ./dist/GC_analysis
+    api_key: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
+    keep-history: true
+    on:
+      tags: true
 
-  provider: script
-  script: bash ./scripts/travis/docker_push.sh
-  on:
-    tags: true
+  - provider: script
+    script: bash ./scripts/travis/docker_push.sh
+    on:
+      tags: true
