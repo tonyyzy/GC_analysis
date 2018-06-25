@@ -8,6 +8,7 @@ import sys
 import gzip
 from Bio import SeqIO
 import pyBigWig
+import multiprocessing as mp
 
 
 def get_args():
@@ -138,9 +139,11 @@ def write_title():
     if output_format == "wiggle":
         result.write(trackline)
         result.write(variablestep)
+        result.flush()
     elif output_format == "gzip":
         result.write(bytes(trackline, "utf-8"))
         result.write(bytes(variablestep, "utf-8"))
+        result.flush()
     elif output_format == "bigwig":
         result.addHeader([(record.id, len(record))])
 
@@ -162,23 +165,15 @@ def generate_write_content():
     return content
 
 
-def generate_result():
+def generate_result(location):
     """
     Calculate GC percentage and write to output file.
     :return: None
     """
-    seq_len = len(record)  # Get length of sequence
-    for i in range((seq_len - window_size + shift) // shift):  # Iterate over the total number of shifts
-        frag = record.seq[i * shift: i * shift + window_size]  # Extract the string for counting
-        # Count number of C and G and convert to percentage
-        percent = round((frag.count("C") + frag.count("G")) / window_size * 100)
-        write_content(i * shift, percent)
-    if (i + 1) * shift < seq_len and not omit_tail:
-        # if trailing sequence exits and omit_tail is False
-        frag = record.seq[(i + 1) * shift:]
-        percent = round((frag.count("C") + frag.count("G")) / len(frag) * 100)
-        write_content((i + 1) * shift, percent)
-    result.close()
+    frag = record.seq[location * shift: location * shift + window_size]  # Extract the string for counting
+    # Count number of C and G and convert to percentage
+    percent = round((frag.count("C") + frag.count("G")) / window_size * 100)
+    return location * shift, percent
 
 
 if __name__ == "__main__":
@@ -211,7 +206,17 @@ if __name__ == "__main__":
         record = records[records.keys().__next__()]
         result = open_results_file()
         write_title()
-        generate_result()
+        seq_len = len(record)
+        pool = mp.Pool(None)
+        lock = mp.Lock()
+        for i in pool.map(generate_result, range((seq_len - window_size + shift) // shift)):
+            write_content(*i)
+        tail = (seq_len - window_size + shift) // shift
+        if tail * shift < seq_len and not omit_tail:
+            # if trailing sequence exits and omit_tail is False
+            tail_frag = record.seq[tail * shift:]
+            tail_percent = round((tail_frag.count("C") + tail_frag.count("G")) / len(tail_frag) * 100)
+            write_content(tail * shift, tail_percent)
     else:
         seq_num = 0
         for key in records.keys():
@@ -219,7 +224,17 @@ if __name__ == "__main__":
             record = records[key]
             result = open_results_files()
             write_title()
-            generate_result()
+            seq_len = len(record)
+            pool = mp.Pool(None)
+            lock = mp.Lock()
+            for i in pool.map(generate_result, range((seq_len - window_size + shift) // shift)):
+                write_content(*i)
+            tail = (seq_len - window_size + shift) // shift
+            if tail * shift < seq_len and not omit_tail:
+                # if trailing sequence exits and omit_tail is False
+                tail_frag = record.seq[tail * shift:]
+                tail_percent = round((tail_frag.count("C") + tail_frag.count("G")) / len(tail_frag) * 100)
+                write_content(tail * shift, tail_percent)
     if output_file is None:
         for err in error:
             sys.stderr.write(err)
