@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/tonyyzy/GC_analysis.svg?branch=master)](https://travis-ci.org/tonyyzy/GC_analysis)
+[![Build Status](https://travis-ci.org/tonyyzy/GC_analysis.svg?branch=parallel)](https://travis-ci.org/tonyyzy/GC_analysis)
 # GC-analysis
 A command-line utility for calculating GC percentages of genome sequences
 
@@ -7,6 +8,43 @@ Calculate the GC content of chromosome 17 of the human reference genome with win
 ```
 ~ $ GC_analysis -i GRCh38-Chrom17.fasta -w 5 -s 5 -o GRCh38-Chrom17
 ```
+
+# Installation guide
+Note that pyBigWig can only be used under linux environment. To work with Windows system, the Docker image can be used as shown below. Alternatively, you can clone the repository, comment out `import pyBigWig` and the script would work but without BigWig support.
+
+1. Run the python script directly. Please ensure you have python3 installed with pyBigwig and Biopython.
+Clone the github repository and install packages.
+```
+git clone https://github.com/tonyyzy/GC_analysis
+cd GC_analysis
+pip3 install -r requirements.txt
+```
+run the script from `GC_analysis` directory.
+```
+python3 ./scripts/GC_analysis.py -i [INPUT] -o [OUTPUT] -w [window size] -s [shift]
+```
+
+2. Use the packaged binary.
+```
+mkdir ~/GC_analysis
+cd ~/GC_analysis
+wget https://github.com/tonyyzy/GC_analysis/releases/download/v0.3/GC_analysis
+```
+Execute the binary command
+```
+GC_analysis -i [INPUT] -o [OUTPUT] -w [window size] -s [shift]
+```
+
+3. Use the Docker image.
+Firstly, pull the docker image (around 384 MB)
+```
+docker pull tonyyzy/gc_analysis
+```
+To use input files outside the container and save output files on your computer, the `-v` volume mapping option will be used. You will need to know the absolute path of the directory you want to map (which can be found out with `pwd`).
+```
+docker run -v /your/local/path:/app tonyyzy/gc_analysis GC_analysis -i /app/yours.fasta -o /app/yours -w 5 -s 5
+```
+This option maps `/your/local/path` to `/app` under the container's root directory. Your result file will be saved to `/your/local/path/yours.wig`.
 
 # Command-line options
 ```
