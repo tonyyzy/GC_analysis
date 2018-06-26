@@ -10,4 +10,6 @@ RUN pip3 install -r requirements.txt
 
 RUN mv GC_analysis.py GC_analysis
 
+RUN chmod +777 GC_analysis
+
 ENV PATH "/GC_analysis:$PATH"
