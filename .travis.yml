@@ -20,8 +20,8 @@ env:
 before_install:
   - wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bigWigToWig
   - chmod +x ./bigWigToWig
-  - chmod +x ./scripts/travis/docs_harness.sh
-  - chmod +x ./scripts/travis/pylint_harness.sh
+  - chmod +x ./travis/docs_harness.sh
+  - chmod +x ./travis/pylint_harness.sh
 # command to install dependencies
 install:
     - pip install -r requirements.txt
@@ -32,9 +32,9 @@ install:
 # command to run tests
 script:
     - if [[ "$TESTENV" == "code" ]]; then pytest tests; fi
-    - if [[ "$TESTENV" == "docs" ]]; then ./scripts/travis/docs_harness.sh; fi
-    - if [[ "$TESTENV" == "pylint" ]]; then ./scripts/travis/pylint_harness.sh; fi
-    - if [[ "$TESTENV" == "build" ]]; then pyinstaller --onefile ./scripts/GC_analysis.py; docker build -t tonyyzy/gc_analysis .; fi
+    - if [[ "$TESTENV" == "docs" ]]; then ./travis/docs_harness.sh; fi
+    - if [[ "$TESTENV" == "pylint" ]]; then ./travis/pylint_harness.sh; fi
+    - if [[ "$TESTENV" == "build" ]]; then pyinstaller --onefile ./GC_analysis/GC_analysis.py; docker build -t tonyyzy/gc_analysis .; fi
 
 deploy:
   - provider: releases
@@ -46,6 +46,6 @@ deploy:
       tags: true
 
   - provider: script
-    script: bash ./scripts/travis/docker_push.sh
+    script: bash ./travis/docker_push.sh
     on:
       tags: true

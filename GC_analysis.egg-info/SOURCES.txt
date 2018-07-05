@@ -1,0 +1,7 @@
+README.md
+setup.py
+GC_analysis/GC_analysis.py
+GC_analysis.egg-info/PKG-INFO
+GC_analysis.egg-info/SOURCES.txt
+GC_analysis.egg-info/dependency_links.txt
+GC_analysis.egg-info/top_level.txt
