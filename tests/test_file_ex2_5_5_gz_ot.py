@@ -8,7 +8,7 @@ import subprocess
 
 def test_1():
     """Test_1"""
-    subprocess.run(["python3", "./scripts/GC_analysis.py",
+    subprocess.run(["python3", "./GC_analysis/GC_analysis.py",
                     "-i", "./tests/ex2.fasta",
                     "-o", "./tests/ex2_5_5_gz_ot_test",
                     "-w", "5",
