@@ -12,7 +12,7 @@ Welcome to GC_analysis's documentation!
     
    license.rst
    modules.rst
-   scripts.rst
+   GC_analysis.rst
 
 Indices and tables
 ==================

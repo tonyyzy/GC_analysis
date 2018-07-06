@@ -4,4 +4,4 @@ scripts
 .. toctree::
    :maxdepth: 4
 
-   scripts
+   GC_analysis
