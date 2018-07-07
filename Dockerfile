@@ -2,7 +2,7 @@ FROM python:3.6.5
 
 WORKDIR /GC_analysis
 
-COPY /scripts/GC_analysis.py /GC_analysis
+COPY /GC_analysis/GC_analysis.py /GC_analysis
 
 COPY /requirements.txt /GC_analysis
 
