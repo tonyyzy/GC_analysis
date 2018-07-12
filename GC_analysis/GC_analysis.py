@@ -208,10 +208,11 @@ if __name__ == "__main__":
         sys.stdout.write("WARNING! {} contains no sequence data.\n".format(input_file))
         raise TypeError
     elif records_num == 1:
-        record = records[records.keys().__next__()]
-        result = open_results_file()
-        write_title()
-        generate_result()
+        for key in records.keys():
+            record = records[key]
+            result = open_results_file()
+            write_title()
+            generate_result()
     else:
         seq_num = 0
         for key in records.keys():
