@@ -12,7 +12,16 @@ Calculate the GC content of chromosome 17 of the human reference genome with win
 # Installation guide
 Note that pyBigWig can only be used under linux environment. To work with Windows system, the Docker image can be used as shown below. Alternatively, you can clone the repository, comment out `import pyBigWig` and the script would work but without BigWig support.
 
-1. Run the python script directly. Please ensure you have python3 installed with pyBigwig and Biopython.
+1. Pip install GC_analysis
+```
+pip3 install GC_analysis
+```
+Then `GC_analysis.py` command will be available globally.
+```
+GC_analysis.py -i [INPUT] -o [OUTPUT] -w [window size] -s [shift]
+```
+
+2. Run the python script directly. Please ensure you have python3 installed with pyBigwig and Biopython.
 Clone the github repository and install packages.
 ```
 git clone https://github.com/tonyyzy/GC_analysis
@@ -24,7 +33,7 @@ run the script from `GC_analysis` directory.
 python3 ./scripts/GC_analysis.py -i [INPUT] -o [OUTPUT] -w [window size] -s [shift]
 ```
 
-2. Use the packaged binary.
+3. Use the packaged binary.
 ```
 mkdir ~/GC_analysis
 cd ~/GC_analysis
@@ -35,7 +44,7 @@ Execute the binary command
 GC_analysis -i [INPUT] -o [OUTPUT] -w [window size] -s [shift]
 ```
 
-3. Use the Docker image.
+4. Use the Docker image.
 Firstly, pull the docker image (around 384 MB)
 ```
 docker pull tonyyzy/gc_analysis
