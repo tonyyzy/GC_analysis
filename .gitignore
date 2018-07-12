@@ -5,3 +5,6 @@ test*.wig
 *.gz
 bigWigToWig
 cleanup.sh
+build
+dist
+GC_analysis.egg-info
