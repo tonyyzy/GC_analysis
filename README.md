@@ -12,7 +12,7 @@ Calculate the GC content of chromosome 17 of the human reference genome with win
 # Installation guide
 Note that pyBigWig can only be used under linux environment. To work with Windows system, the Docker image can be used as shown below. Alternatively, you can clone the repository, comment out `import pyBigWig` and the script would work but without BigWig support.
 
-1. Pip install GC_analysis
+1. Pip install GC_analysis (NB. Python3 is recommanded but GC_analysis should work with Python2 as well)
 ```
 pip3 install GC_analysis
 ```
@@ -159,3 +159,200 @@ variableStep chrom=chr1 span=5
 WARNING! BigWig file does not allow overlapped items. A wiggle file was generated instead.
 WARNING! An output filename is needed to save output as bigwig. The result is shown above.
 ```
+
+## Timing againts human chromosomes
+<details><summary>Click for raw data table</summary>
+<p>
+<table class="tg">
+  <tr>
+    <th class="tg-us36">Entry</th>
+    <th class="tg-us36">Human chromosome</th>
+    <th class="tg-us36">No. of base pairs</th>
+    <th class="tg-us36">Average real time - single thread (s)</th>
+    <th class="tg-us36">Average real time - multi threads (s)</th>
+  </tr>
+  <tr>
+    <td class="tg-us36">CM000663.2.fasta</td>
+    <td class="tg-us36">1</td>
+    <td class="tg-us36">248956422</td>
+    <td class="tg-us36">288.429</td>
+    <td class="tg-us36">179.221</td>
+  </tr>
+  <tr>
+    <td class="tg-us36">CM000664.2.fasta</td>
+    <td class="tg-us36">2</td>
+    <td class="tg-us36">242193529</td>
+    <td class="tg-us36">276.355</td>
+    <td class="tg-us36">169.611</td>
+  </tr>
+  <tr>
+    <td class="tg-us36">CM000665.2.fasta</td>
+    <td class="tg-us36">3</td>
+    <td class="tg-us36">198295559</td>
+    <td class="tg-us36">227.528</td>
+    <td class="tg-us36">135.637</td>
+  </tr>
+  <tr>
+    <td class="tg-us36">CM000666.2.fasta</td>
+    <td class="tg-us36">4</td>
+    <td class="tg-us36">190214555</td>
+    <td class="tg-us36">217.846</td>
+    <td class="tg-us36">153.091</td>
+  </tr>
+  <tr>
+    <td class="tg-us36">CM000667.2.fasta</td>
+    <td class="tg-us36">5</td>
+    <td class="tg-us36">181538259</td>
+    <td class="tg-us36">205.623</td>
+    <td class="tg-us36">123.858</td>
+  </tr>
+  <tr>
+    <td class="tg-us36">CM000668.2.fasta</td>
+    <td class="tg-us36">6</td>
+    <td class="tg-us36">170805979</td>
+    <td class="tg-us36">193.209</td>
+    <td class="tg-us36">117.180</td>
+  </tr>
+  <tr>
+    <td class="tg-us36">CM000669.2.fasta</td>
+    <td class="tg-us36">7</td>
+    <td class="tg-us36">159345973</td>
+    <td class="tg-us36">183.445</td>
+    <td class="tg-us36">109.135</td>
+  </tr>
+  <tr>
+    <td class="tg-us36">CM000670.2.fasta</td>
+    <td class="tg-us36">8</td>
+    <td class="tg-us36">145138636</td>
+    <td class="tg-us36">166.607</td>
+    <td class="tg-us36">98.632</td>
+  </tr>
+  <tr>
+    <td class="tg-us36">CM000671.2.fasta</td>
+    <td class="tg-us36">9</td>
+    <td class="tg-us36">138394717</td>
+    <td class="tg-us36">157.142</td>
+    <td class="tg-us36">93.898</td>
+  </tr>
+  <tr>
+    <td class="tg-us36">CM000672.2.fasta</td>
+    <td class="tg-us36">10</td>
+    <td class="tg-us36">133797422</td>
+    <td class="tg-us36">150.872</td>
+    <td class="tg-us36">92.371</td>
+  </tr>
+  <tr>
+    <td class="tg-us36">CM000673.2.fasta</td>
+    <td class="tg-us36">11</td>
+    <td class="tg-us36">135086622</td>
+    <td class="tg-us36">154.003</td>
+    <td class="tg-us36">92.498</td>
+  </tr>
+  <tr>
+    <td class="tg-us36">CM000674.2.fasta</td>
+    <td class="tg-us36">12</td>
+    <td class="tg-us36">133275309</td>
+    <td class="tg-us36">150.533</td>
+    <td class="tg-us36">90.807</td>
+  </tr>
+  <tr>
+    <td class="tg-us36">CM000675.2.fasta</td>
+    <td class="tg-us36">13</td>
+    <td class="tg-us36">114364328</td>
+    <td class="tg-us36">129.951</td>
+    <td class="tg-us36">77.498</td>
+  </tr>
+  <tr>
+    <td class="tg-us36">CM000676.2.fasta</td>
+    <td class="tg-us36">14</td>
+    <td class="tg-us36">107043718</td>
+    <td class="tg-us36">121.008</td>
+    <td class="tg-us36">71.970</td>
+  </tr>
+  <tr>
+    <td class="tg-us36">CM000677.2.fasta</td>
+    <td class="tg-us36">15</td>
+    <td class="tg-us36">101991189</td>
+    <td class="tg-us36">115.194</td>
+    <td class="tg-us36">68.336</td>
+  </tr>
+  <tr>
+    <td class="tg-us36">CM000678.2.fasta</td>
+    <td class="tg-us36">16</td>
+    <td class="tg-us36">90338345</td>
+    <td class="tg-us36">103.169</td>
+    <td class="tg-us36">60.799</td>
+  </tr>
+  <tr>
+    <td class="tg-us36">CM000679.2.fasta</td>
+    <td class="tg-us36">17</td>
+    <td class="tg-us36">83257441</td>
+    <td class="tg-us36">94.353</td>
+    <td class="tg-us36">55.729</td>
+  </tr>
+  <tr>
+    <td class="tg-us36">CM000680.2.fasta</td>
+    <td class="tg-us36">18</td>
+    <td class="tg-us36">80373285</td>
+    <td class="tg-us36">92.020</td>
+    <td class="tg-us36">53.395</td>
+  </tr>
+  <tr>
+    <td class="tg-us36">CM000681.2.fasta</td>
+    <td class="tg-us36">19</td>
+    <td class="tg-us36">58617616</td>
+    <td class="tg-us36">67.506</td>
+    <td class="tg-us36">39.308</td>
+  </tr>
+  <tr>
+    <td class="tg-us36">CM000682.2.fasta</td>
+    <td class="tg-us36">20</td>
+    <td class="tg-us36">64444167</td>
+    <td class="tg-us36">74.048</td>
+    <td class="tg-us36">43.280</td>
+  </tr>
+  <tr>
+    <td class="tg-us36">CM000683.2.fasta</td>
+    <td class="tg-us36">21</td>
+    <td class="tg-us36">46709983</td>
+    <td class="tg-us36">53.633</td>
+    <td class="tg-us36">31.118</td>
+  </tr>
+  <tr>
+    <td class="tg-us36">CM000684.2.fasta</td>
+    <td class="tg-us36">22</td>
+    <td class="tg-us36">50818468</td>
+    <td class="tg-us36">57.466</td>
+    <td class="tg-us36">33.701</td>
+  </tr>
+  <tr>
+    <td class="tg-us36">CM000685.2.fasta</td>
+    <td class="tg-us36">X</td>
+    <td class="tg-us36">156040895</td>
+    <td class="tg-us36">176.895</td>
+    <td class="tg-us36">105.408</td>
+  </tr>
+  <tr>
+    <td class="tg-us36">CM000686.2.fasta</td>
+    <td class="tg-us36">Y</td>
+    <td class="tg-us36">57227415</td>
+    <td class="tg-us36">67.016</td>
+    <td class="tg-us36">38.142</td>
+  </tr>
+  <tr>
+    <td class="tg-us36">J01415.2.fasta</td>
+    <td class="tg-us36">MT</td>
+    <td class="tg-us36">16569</td>
+    <td class="tg-us36">0.231</td>
+    <td class="tg-us36">0.397</td>
+  </tr>
+</table>
+  
+  </p>
+</details>
+
+
+![Execution time vs. number of base pairs plot](https://github.com/tonyyzy/GC_analysis/blob/master/tests/time_profile/GC_time_profile.png "execution time plot")
+
+
+## (EXPERIMENTAL!!!) Multi-threaded GC_analysis
