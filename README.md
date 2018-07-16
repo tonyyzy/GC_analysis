@@ -30,7 +30,7 @@ pip3 install -r requirements.txt
 ```
 run the script from `GC_analysis` directory.
 ```
-python3 ./scripts/GC_analysis.py -i [INPUT] -o [OUTPUT] -w [window size] -s [shift]
+python3 ./GC_analysis/GC_analysis.py -i [INPUT] -o [OUTPUT] -w [window size] -s [shift]
 ```
 
 3. Use the packaged binary.
@@ -357,8 +357,17 @@ WARNING! An output filename is needed to save output as bigwig. The result is sh
 ![Execution time vs. number of base pairs plot](https://github.com/tonyyzy/GC_analysis/blob/master/tests/time_profile/GC_time_profile.png "execution time plot")
 \* 1) Real time data is the average of three runs; 2) GC_analysis parameters for each run is `-w 5 -s 5`; 3) `Serial` data is collected with the `Master` branch, `Parallel` data is collected with the `Parallel` branch.
 
-As can be seen from the plot, `GC_analysis` scales well with number of base pairs, resulted a linear relationship between the execution time and the size of the chromosomes. Although multi-threaded branch can provide ~1.7x speed improvement, it has a significantly higher memory consumption, hence it's not recommended.
+As can be seen from the plot, `GC_analysis` scales well with number of base pairs, resulted a linear relationship between the execution time and the size of the chromosomes. Although multi-threaded version can provide ~1.7x speed improvement, it has a significantly higher memory consumption, hence it's not recommended.
 
 
 ## (EXPERIMENTAL!!!) Multi-threaded GC_analysis
+Git clone the `parallel` branch from GitHub repo:
+```
+git clone --single-branch -b parallel https://github.com/tonyyzy/GC_analysis
+```
+Execute as normal from `GC_analysis` directory
+```
+~ python3 ./scripts/GC_analysis.py -i GRCh38-Chrom17.fasta -w 5 -s 5 -o GRCh38-Chrom17
+```
 
+This multithreading implementation is a very crude one and only result in ~1.7x speed up. A large amount of RAM is needed to store out-of-order intermediate results for sorting.
