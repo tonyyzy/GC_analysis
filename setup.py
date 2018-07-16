@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="GC_analysis",
-    version="0.3.2",
+    version="0.3.3",
     author="Tony Yang",
     author_email="tony@tony.tc",
     description="A program that compute the GC percentage of a given genomic sequence",
@@ -14,6 +14,10 @@ setuptools.setup(
     url="https://github.com/tonyyzy/GC_analysis",
     packages=setuptools.find_packages("GC_analysis", exclude=["tests"]),
     scripts=['GC_analysis/GC_analysis.py'],
+    install_requires=[
+          'Biopython',
+          'pyBigWig'
+      ],
     classifiers=(
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: Apache Software License",
