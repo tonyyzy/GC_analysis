@@ -60,9 +60,11 @@ def get_args():
                                                                     "bigwig",
                                                                     "gzip"],
                         default="wiggle")
+    parser.add_argument("-one", "--one_file", action="store_true", help="Force one file output", default=False)
     args = parser.parse_args()
 
-    return args.input_file, args.output_file, args.window_size, args.shift, args.omit_tail, args.output_format
+    return args.input_file, args.output_file, args.window_size, args.shift, args.omit_tail, args.output_format,\
+           args.one_file
 
 
 def open_results_file():
@@ -178,12 +180,11 @@ def generate_result():
         frag = record.seq[(i + 1) * shift:]
         percent = round((frag.count("C") + frag.count("G")) / len(frag) * 100)
         write_content((i + 1) * shift, percent)
-    result.close()
 
 
 if __name__ == "__main__":
     error = []  # Store generated error message, and write to stderr at the end of stdout output
-    input_file, output_file, window_size, shift, omit_tail, output_format = get_args()[:]
+    input_file, output_file, window_size, shift, omit_tail, output_format, one_file = get_args()[:]
     new_output_format = output_format
 
     if output_format == "bigwig" and window_size > shift:
@@ -205,14 +206,17 @@ if __name__ == "__main__":
     records_num = len(records)
     write_content = generate_write_content()
     if records_num < 1:
+        # No sequence in fasta file, corrupted
         sys.stdout.write("WARNING! {} contains no sequence data.\n".format(input_file))
         raise TypeError
-    elif records_num == 1:
+    elif records_num == 1 or one_file:
+        result = open_results_file()
+        # one sequence in fasta file or one output file for all sequences
         for key in records.keys():
             record = records[key]
-            result = open_results_file()
             write_title()
             generate_result()
+        result.close()
     else:
         seq_num = 0
         for key in records.keys():
@@ -221,6 +225,7 @@ if __name__ == "__main__":
             result = open_results_files()
             write_title()
             generate_result()
+            result.close()
     if output_file is None:
         for err in error:
             sys.stderr.write(err)
