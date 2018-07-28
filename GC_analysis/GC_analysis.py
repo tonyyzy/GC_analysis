@@ -120,7 +120,7 @@ def open_results_files():
     """
     if output_file:
         if output_format == "wiggle":
-            file = open(output_file + "_seq{}.wig".format(seq_num), "w+", newline="\n")
+            file = open(output_file + "_seq{}.wig".format(seq_num), "w+")
         elif output_format == "gzip":
             file = gzip.open(output_file + "_seq{}.wig.gz".format(seq_num), "w+")
         elif output_format == "bigwig":
@@ -212,16 +212,14 @@ if __name__ == "__main__":
     elif records_num == 1 or one_file:
         result = open_results_file()
         # one sequence in fasta file or one output file for all sequences
-        for key in records.keys():
-            record = records[key]
+        for record in SeqIO.parse(input_file, "fasta"):
             write_title()
             generate_result()
         result.close()
     else:
         seq_num = 0
-        for key in records.keys():
+        for record in SeqIO.parse(input_file, "fasta"):
             seq_num += 1
-            record = records[key]
             result = open_results_files()
             write_title()
             generate_result()
