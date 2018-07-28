@@ -86,7 +86,7 @@ def open_results_file():
     """
     if output_file:
         if output_format == "wiggle":
-            file = open(output_file + ".wig", "w+", newline="\n")
+            file = open(output_file + ".wig", "w+")
         elif output_format == "gzip":
             file = gzip.open(output_file + ".wig.gz", "w+")
         elif output_format == "bigwig":
