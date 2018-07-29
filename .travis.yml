@@ -57,6 +57,7 @@ deploy:
       condition: $TESTENV = "build"
 
   - provider: pypi
+    skip-cleanup: true
     user: tonyyzy
     password: $PYPI_PASSWORD
     on:
