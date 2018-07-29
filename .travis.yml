@@ -36,6 +36,8 @@ script:
     - if [[ "$TESTENV" == "pylint" ]]; then ./travis/pylint_harness.sh; fi
     - if [[ "$TESTENV" == "build" ]]; then pyinstaller --onefile ./GC_analysis/GC_analysis.py; docker build -t tonyyzy/gc_analysis .; fi
 
+before_deploy:
+    sed -i -e 's/TAG_VERSION/'$TRAVIS_TAG'/g' setup.py
 deploy:
   - provider: releases
     skip-cleanup: true
@@ -46,6 +48,14 @@ deploy:
       tags: true
 
   - provider: script
+    skip-cleanup: true
     script: bash ./travis/docker_push.sh
     on:
       tags: true
+
+   - provider: pypi
+    user: tonyyzy
+    password: $PYPI_PASSWORD
+    distributions: sdist bdist_wheel
+    on:
+        tags: true

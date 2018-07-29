@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="GC_analysis",
-    version="0.3.3",
+    version="TAG_VERSION",
     author="Tony Yang",
     author_email="tony@tony.tc",
     description="A program that compute the GC percentage of a given genomic sequence",
