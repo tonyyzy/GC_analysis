@@ -55,6 +55,6 @@ deploy:
    - provider: pypi
      user: tonyyzy
      password: $PYPI_PASSWORD
-     distributions: "sdist bdist_wheel"
      on:
        tags: true
+       distributions: "sdist bdist_wheel"
