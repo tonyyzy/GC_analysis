@@ -46,11 +46,13 @@ deploy:
     keep-history: true
     on:
       tags: true
+      condition: $TESTENV = "build"
 
   - provider: script
     script: bash ./travis/docker_push.sh
     on:
       tags: true
+      condition: $TESTENV = "build"
 
   - provider: pypi
     user: tonyyzy
@@ -58,4 +60,5 @@ deploy:
     on:
       tags: true
       distributions: sdist bdist_wheel
+      condition: $TESTENV = "build"
        
