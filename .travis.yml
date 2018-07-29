@@ -48,7 +48,6 @@ deploy:
       tags: true
 
   - provider: script
-    skip-cleanup: true
     script: bash ./travis/docker_push.sh
     on:
       tags: true
