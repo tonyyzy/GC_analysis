@@ -38,6 +38,8 @@ script:
 
 before_deploy:
     - sed -i -e 's/TAG_VERSION/'$TRAVIS_TAG'/g' setup.py
+    - echo $TRAVIS_TAG
+    - cat setup.py
 deploy:
   - provider: releases
     skip-cleanup: true
