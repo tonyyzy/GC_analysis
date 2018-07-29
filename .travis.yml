@@ -62,7 +62,7 @@ deploy:
     password: $PYPI_PASSWORD
     on:
       tags: true
-      repo: tonyyzy/GC_analysis
+      repo: tonyyzy/GC-analysis
       distributions: "sdist bdist_wheel"
       condition: $TESTENV = "build"
        
