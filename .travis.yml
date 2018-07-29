@@ -60,8 +60,8 @@ deploy:
     skip-cleanup: true
     user: tonyyzy
     password: $PYPI_PASSWORD
+    distributions: sdist bdist_wheel
     on:
       tags: true
-      distributions: "sdist bdist_wheel"
       condition: $TESTENV = "build"
        
