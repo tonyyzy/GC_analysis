@@ -52,9 +52,9 @@ deploy:
     on:
       tags: true
 
-   - provider: pypi
-     user: tonyyzy
-     password: $PYPI_PASSWORD
-     on:
-       tags: true
-       distributions: "sdist bdist_wheel"
+#   - provider: pypi
+#     user: tonyyzy
+#     password: $PYPI_PASSWORD
+#     on:
+#       tags: true
+#       distributions: "sdist bdist_wheel"
