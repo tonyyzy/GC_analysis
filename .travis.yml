@@ -63,6 +63,6 @@ deploy:
     on:
       tags: true
       repo: tonyyzy/GC_analysis
-      distributions: sdist bdist_wheel
+      distributions: "sdist bdist_wheel"
       condition: $TESTENV = "build"
        
