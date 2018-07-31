@@ -1,4 +1,4 @@
-FROM python:3.6.5
+FROM library/python:3.7-alpine3.7
 
 WORKDIR /GC_analysis
 
