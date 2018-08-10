@@ -86,6 +86,9 @@ Use if the trailing sequence should be omitted. Default behaviour is to retain t
 -f {wiggle,bigwig,gzip}, --output_format {wiggle,bigwig,gzip}
 Choose output formats from wiggle, bigwig or gzip compressed wiggle file.
 
+-one, --one_file
+Force one file output
+
 ```
 ## Example usage
 1. Calculate the GC content of chromosome 17 of the human reference genome, the percentage is calculated over five base pairs (window_size), and the window is shifted by five base pairs every time (i.e. there is no overlapping base paires in each entry).
@@ -159,7 +162,11 @@ variableStep chrom=chr1 span=5
 WARNING! BigWig file does not allow overlapped items. A wiggle file was generated instead.
 WARNING! An output filename is needed to save output as bigwig. The result is shown above.
 ```
-
+5. If the input FASTA file contains multiple sequences and the results should be written to a single file instead of one sequence per file, you can use the `-one` optional arguments.
+```
+GC_analysis -i multiple.fasta -o multiple -w 5 -s 5 -one
+```
+If `-one` is not specified, each sequence's GC result will be written to one file. The filenames will be the given filename followed by \"_seq\" + the sequence's number.
 ## Timing againts human chromosomes
 <details><summary><b>Click for raw data table</b></summary>
 <p>
