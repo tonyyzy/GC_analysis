@@ -8,3 +8,4 @@ cleanup.sh
 build
 dist
 GC_analysis.egg-info
+tests/chrom.size
