@@ -9,3 +9,7 @@ build
 dist
 GC_analysis.egg-info
 tests/chrom.size
+tests/generate_tests.sh
+tests/example1.fasta
+tests/s.wig
+tests/GRCh38-Chrom17_frag.fasta
