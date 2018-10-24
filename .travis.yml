@@ -25,6 +25,7 @@ before_install:
 # command to install dependencies
 install:
     - pip install -r requirements.txt
+    - pip install --upgrade setuptools
     - if [[ "$TESTENV" == "docs" ]]; then pip install sphinx;fi
     - if [[ "$TESTENV" == "pylint" ]]; then pip install pylint;fi
     - if [[ "$TESTENV" == "build" ]]; then pip install pyinstaller;fi
